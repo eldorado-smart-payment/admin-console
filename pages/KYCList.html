@@ -1,0 +1,771 @@
+<!doctype html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>KYC Management | ES Payment</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8f9ff;
+      }
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: minmax(100px, auto);
+        gap: 24px;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px);
+        border: 1px solid #e2e8f0;
+      }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed-variant": "#374475",
+              "primary-fixed": "#dce1ff",
+              background: "#f8f9ff",
+              "inverse-surface": "#213145",
+              "tertiary-fixed-dim": "#dcc66e",
+              "on-tertiary-fixed": "#221b00",
+              tertiary: "#6e5e0d",
+              "secondary-fixed-dim": "#f0bf56",
+              "error-container": "#ffdad6",
+              "tertiary-fixed": "#f9e287",
+              "on-primary-container": "#808dc2",
+              "tertiary-container": "#bfab56",
+              "outline-variant": "#c6c5d0",
+              "primary-fixed-dim": "#b7c4fd",
+              "surface-dim": "#cbdbf5",
+              "on-secondary-container": "#745400",
+              "surface-container-lowest": "#ffffff",
+              primary: "#000f3f",
+              outline: "#767680",
+              surface: "#f8f9ff",
+              "on-surface": "#0b1c30",
+              "on-tertiary": "#ffffff",
+              "surface-container-low": "#eff4ff",
+              "surface-tint": "#4f5c8e",
+              "primary-container": "#172554",
+              "on-tertiary-fixed-variant": "#534600",
+              "on-background": "#0b1c30",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary-container": "#4b3f00",
+              "inverse-primary": "#b7c4fd",
+              "secondary-fixed": "#ffdea1",
+              "on-surface-variant": "#45464f",
+              "on-error-container": "#93000a",
+              "surface-container": "#e5eeff",
+              "surface-bright": "#f8f9ff",
+              "on-secondary": "#ffffff",
+              "secondary-container": "#fdca60",
+              "on-error": "#ffffff",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed-variant": "#5c4200",
+              "on-primary-fixed": "#071747",
+              error: "#ba1a1a",
+              "on-secondary-fixed": "#261900",
+              "surface-container-high": "#dce9ff",
+              secondary: "#7a5900",
+              "inverse-on-surface": "#eaf1ff",
+              "on-primary": "#ffffff",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              "margin-desktop": "48px",
+              xl: "32px",
+              lg: "24px",
+              xs: "4px",
+              gutter: "24px",
+              "max-width": "1440px",
+              md: "16px",
+              sm: "8px",
+              "margin-mobile": "16px",
+              base: "4px",
+            },
+            fontFamily: {
+              "headline-lg": ["Inter"],
+              "body-md": ["Inter"],
+              "label-md": ["Inter"],
+              "headline-md": ["Inter"],
+              "body-lg": ["Inter"],
+              "display-lg": ["Inter"],
+              "body-sm": ["Inter"],
+            },
+            fontSize: {
+              "headline-lg": [
+                "32px",
+                {
+                  lineHeight: "40px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "label-md": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+              "display-lg": [
+                "48px",
+                {
+                  lineHeight: "56px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background text-on-background">
+    <!-- Side Navigation Bar -->
+    <nav
+      class="h-screen w-64 fixed left-0 top-0 bg-primary border-r border-outline-variant flex flex-col py-lg px-md z-50"
+    >
+      <div class="mb-xl px-md">
+        <h1
+          class="font-headline-md text-headline-md font-bold text-secondary-fixed"
+        >
+          ES Payment
+        </h1>
+        <p class="font-label-md text-label-md text-primary-fixed opacity-70">
+          Admin Console
+        </p>
+      </div>
+      <div class="flex-1 space-y-sm">
+        <a
+          class="flex items-center gap-md text-primary-fixed hover:bg-primary-container px-md py-sm rounded-lg transition-colors group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="font-body-md">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed hover:bg-primary-container px-md py-sm rounded-lg transition-colors group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">receipt_long</span>
+          <span class="font-body-md">Transactions</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed hover:bg-primary-container px-md py-sm rounded-lg transition-colors group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">payments</span>
+          <span class="font-body-md">Bill Payments</span>
+        </a>
+        <a
+          class="flex items-center gap-md bg-secondary text-on-secondary rounded-lg px-md py-sm"
+          href="#"
+        >
+          <span class="material-symbols-outlined">admin_panel_settings</span>
+          <span class="font-body-md">Admin Console</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed hover:bg-primary-container px-md py-sm rounded-lg transition-colors group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">gavel</span>
+          <span class="font-body-md">Compliance</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed hover:bg-primary-container px-md py-sm rounded-lg transition-colors group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">help_center</span>
+          <span class="font-body-md">Support</span>
+        </a>
+      </div>
+      <button
+        class="mt-auto bg-secondary-container text-on-secondary-container font-label-md py-md px-lg rounded-full flex items-center justify-center gap-sm hover:opacity-90 active:scale-95 transition-all"
+      >
+        <span class="material-symbols-outlined">add</span>
+        New Transaction
+      </button>
+    </nav>
+    <!-- Main Content Wrapper -->
+    <div class="ml-64 min-h-screen">
+      <!-- Top App Bar -->
+      <header
+        class="flex justify-between items-center h-16 px-gutter sticky top-0 bg-surface-container-lowest border-b border-outline-variant z-40"
+      >
+        <div class="flex items-center gap-lg">
+          <div class="relative">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline"
+              >search</span
+            >
+            <input
+              class="pl-10 pr-md py-xs bg-surface-container-low border border-outline-variant rounded-full text-body-sm focus:outline-none focus:border-primary w-64 transition-all"
+              placeholder="Search KYC files..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-lg">
+          <div
+            class="flex items-center gap-md border-r border-outline-variant pr-lg"
+          >
+            <button
+              class="text-on-surface-variant hover:text-primary transition-colors"
+            >
+              <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <button
+              class="text-on-surface-variant hover:text-primary transition-colors"
+            >
+              <span class="material-symbols-outlined">help</span>
+            </button>
+            <button
+              class="text-on-surface-variant hover:text-primary transition-colors"
+            >
+              <span class="material-symbols-outlined">settings</span>
+            </button>
+          </div>
+          <div class="flex items-center gap-sm">
+            <div class="text-right">
+              <p class="font-label-md text-primary">Alexander Pierce</p>
+              <p class="text-[10px] text-outline">Compliance Officer</p>
+            </div>
+            <div
+              class="w-10 h-10 rounded-full bg-cover bg-center border border-outline-variant"
+              data-alt="A professional headshot of a middle-aged corporate executive with a neutral expression, wearing a tailored navy suit and white shirt. The background is a blurred high-end corporate office with soft, warm golden lighting and glass partitions, embodying a premium and authoritative professional atmosphere."
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuB2pZRRcRms6QuhX3_Rt3twh-1VVtJGiSYc8iLckt71WRuxE8s2lz_Rp4TEI5QxoVPgLzGlkErC4eDxYh37r8PrkW3SSbLCjxIaRcP6NDWFLj3U4hjf7fIWmHWA50vOgNPHYcI0XcBMw-7K_chWwSZDolU4Rox_yPvxI91i1N4FXtSmd5BG4uJ9AwACqmSRV_Uh8Z8AazGb5s-H2NsnlCaEOHRgsjs8E0UrXU_WWxmY5LlJVpFkWfn5sg&quot;);
+              "
+            ></div>
+          </div>
+        </div>
+      </header>
+      <!-- Content Canvas -->
+      <main class="p-gutter max-w-max-width mx-auto">
+        <!-- Page Header -->
+        <div class="flex justify-between items-end mb-xl">
+          <div>
+            <h2 class="font-headline-lg text-primary">
+              KYC Individual Verification
+            </h2>
+            <p class="font-body-md text-on-surface-variant">
+              Review and manage institutional-grade identity submissions.
+            </p>
+          </div>
+          <div class="flex gap-sm">
+            <button
+              class="px-lg py-sm border border-primary text-primary rounded font-label-md hover:bg-surface-container-low transition-colors"
+            >
+              Export Report
+            </button>
+            <button
+              class="px-lg py-sm bg-primary text-on-primary rounded font-label-md hover:opacity-90 transition-opacity"
+            >
+              Batch Approve
+            </button>
+          </div>
+        </div>
+        <!-- Bento Stats Section -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-lg mb-xl">
+          <div
+            class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant"
+          >
+            <p
+              class="font-label-md text-outline uppercase tracking-wider mb-xs"
+            >
+              Pending Review
+            </p>
+            <p class="font-display-lg text-primary">142</p>
+            <div class="flex items-center gap-xs text-secondary mt-sm">
+              <span class="material-symbols-outlined text-sm">trending_up</span>
+              <span class="font-label-md">+12% from yesterday</span>
+            </div>
+          </div>
+          <div
+            class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant"
+          >
+            <p
+              class="font-label-md text-outline uppercase tracking-wider mb-xs"
+            >
+              Verified Today
+            </p>
+            <p class="font-display-lg text-primary">89</p>
+            <div class="flex items-center gap-xs text-tertiary mt-sm">
+              <span class="material-symbols-outlined text-sm"
+                >check_circle</span
+              >
+              <span class="font-label-md">94% Success Rate</span>
+            </div>
+          </div>
+          <div
+            class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant border-l-4 border-l-error"
+          >
+            <p
+              class="font-label-md text-outline uppercase tracking-wider mb-xs"
+            >
+              Flagged Issues
+            </p>
+            <p class="font-display-lg text-error">12</p>
+            <div class="flex items-center gap-xs text-error mt-sm">
+              <span class="material-symbols-outlined text-sm">warning</span>
+              <span class="font-label-md">Requires Senior Review</span>
+            </div>
+          </div>
+          <div
+            class="bg-primary text-on-primary p-lg rounded-xl flex flex-col justify-center relative overflow-hidden"
+          >
+            <div class="relative z-10">
+              <p
+                class="font-label-md text-primary-fixed opacity-70 uppercase tracking-wider mb-xs"
+              >
+                Risk Distribution
+              </p>
+              <p class="font-headline-md font-bold text-secondary-fixed">
+                Global Health: Stable
+              </p>
+              <p class="font-label-md mt-sm">
+                Institutional compliance at 99.8%
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Table Section -->
+        <div
+          class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden"
+        >
+          <div
+            class="px-lg py-md border-b border-outline-variant bg-surface-container-low flex justify-between items-center"
+          >
+            <div class="flex gap-md">
+              <button
+                class="flex items-center gap-xs font-label-md text-primary border-b-2 border-secondary pb-xs"
+              >
+                All Submissions
+              </button>
+              <button
+                class="flex items-center gap-xs font-label-md text-outline hover:text-primary transition-colors pb-xs"
+              >
+                Critical Risk
+              </button>
+              <button
+                class="flex items-center gap-xs font-label-md text-outline hover:text-primary transition-colors pb-xs"
+              >
+                Expiring Docs
+              </button>
+            </div>
+            <div class="flex gap-sm">
+              <button
+                class="p-xs hover:bg-surface-container-high rounded transition-colors text-outline"
+              >
+                <span class="material-symbols-outlined">filter_list</span>
+              </button>
+            </div>
+          </div>
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-primary text-on-primary">
+              <tr>
+                <th
+                  class="px-lg py-md font-label-md uppercase tracking-widest text-[10px]"
+                >
+                  User Name
+                </th>
+                <th
+                  class="px-lg py-md font-label-md uppercase tracking-widest text-[10px]"
+                >
+                  Submission Date
+                </th>
+                <th
+                  class="px-lg py-md font-label-md uppercase tracking-widest text-[10px]"
+                >
+                  Type
+                </th>
+                <th
+                  class="px-lg py-md font-label-md uppercase tracking-widest text-[10px]"
+                >
+                  Status
+                </th>
+                <th
+                  class="px-lg py-md font-label-md uppercase tracking-widest text-[10px]"
+                >
+                  Risk Level
+                </th>
+                <th
+                  class="px-lg py-md font-label-md uppercase tracking-widest text-[10px] text-right"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant">
+              <!-- Row 1 -->
+              <tr class="hover:bg-surface-container transition-colors group">
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-sm">
+                    <div
+                      class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-bold text-xs"
+                    >
+                      JD
+                    </div>
+                    <div>
+                      <p class="font-body-md font-semibold text-primary">
+                        Jonathan Dexler
+                      </p>
+                      <p class="text-[11px] text-outline">ID: #KYC-90821</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-lg py-md font-body-sm text-on-surface-variant">
+                  Oct 24, 2023 | 14:22
+                </td>
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-xs text-on-surface-variant">
+                    <span class="material-symbols-outlined text-sm">badge</span>
+                    <span class="font-body-sm">Passport (Intl)</span>
+                  </div>
+                </td>
+                <td class="px-lg py-md">
+                  <span
+                    class="px-sm py-xs bg-secondary-container text-on-secondary-container text-[11px] font-bold rounded-full uppercase tracking-tighter"
+                    >Pending</span
+                  >
+                </td>
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-sm">
+                    <div
+                      class="w-16 h-1.5 bg-surface-container-highest rounded-full overflow-hidden"
+                    >
+                      <div class="w-1/4 h-full bg-tertiary"></div>
+                    </div>
+                    <span class="font-label-md text-tertiary">Low</span>
+                  </div>
+                </td>
+                <td class="px-lg py-md text-right">
+                  <button
+                    class="text-primary hover:bg-primary-fixed p-sm rounded-full transition-colors"
+                  >
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr class="hover:bg-surface-container transition-colors group">
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-sm">
+                    <div
+                      class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center text-primary font-bold text-xs"
+                    >
+                      SM
+                    </div>
+                    <div>
+                      <p class="font-body-md font-semibold text-primary">
+                        Sarah Montague
+                      </p>
+                      <p class="text-[11px] text-outline">ID: #KYC-90744</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-lg py-md font-body-sm text-on-surface-variant">
+                  Oct 24, 2023 | 11:05
+                </td>
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-xs text-on-surface-variant">
+                    <span class="material-symbols-outlined text-sm"
+                      >identity_platform</span
+                    >
+                    <span class="font-body-sm">NIN (National)</span>
+                  </div>
+                </td>
+                <td class="px-lg py-md">
+                  <span
+                    class="px-sm py-xs bg-tertiary-fixed text-on-tertiary-fixed text-[11px] font-bold rounded-full uppercase tracking-tighter"
+                    >Verified</span
+                  >
+                </td>
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-sm">
+                    <div
+                      class="w-16 h-1.5 bg-surface-container-highest rounded-full overflow-hidden"
+                    >
+                      <div class="w-[15%] h-full bg-tertiary"></div>
+                    </div>
+                    <span class="font-label-md text-tertiary">Minimal</span>
+                  </div>
+                </td>
+                <td class="px-lg py-md text-right">
+                  <button
+                    class="text-primary hover:bg-primary-fixed p-sm rounded-full transition-colors"
+                  >
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr class="hover:bg-error-container transition-colors group">
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-sm">
+                    <div
+                      class="w-8 h-8 rounded bg-error text-on-error flex items-center justify-center text-xs"
+                    >
+                      <span class="material-symbols-outlined"
+                        >priority_high</span
+                      >
+                    </div>
+                    <div>
+                      <p class="font-body-md font-semibold text-primary">
+                        CryptoVanguard LLC
+                      </p>
+                      <p class="text-[11px] text-outline">ID: #KYC-90612</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-lg py-md font-body-sm text-on-surface-variant">
+                  Oct 23, 2023 | 16:50
+                </td>
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-xs text-on-surface-variant">
+                    <span class="material-symbols-outlined text-sm"
+                      >corporate_fare</span
+                    >
+                    <span class="font-body-sm">Articles of Inc.</span>
+                  </div>
+                </td>
+                <td class="px-lg py-md">
+                  <span
+                    class="px-sm py-xs bg-error text-on-error text-[11px] font-bold rounded-full uppercase tracking-tighter"
+                    >Flagged</span
+                  >
+                </td>
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-sm">
+                    <div
+                      class="w-16 h-1.5 bg-surface-container-highest rounded-full overflow-hidden"
+                    >
+                      <div class="w-[85%] h-full bg-error"></div>
+                    </div>
+                    <span class="font-label-md text-error">High</span>
+                  </div>
+                </td>
+                <td class="px-lg py-md text-right">
+                  <button
+                    class="text-error hover:bg-white p-sm rounded-full transition-colors"
+                  >
+                    <span class="material-symbols-outlined">gavel</span>
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr class="hover:bg-surface-container transition-colors group">
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-sm">
+                    <div
+                      class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-bold text-xs"
+                    >
+                      AW
+                    </div>
+                    <div>
+                      <p class="font-body-md font-semibold text-primary">
+                        Aisha Williams
+                      </p>
+                      <p class="text-[11px] text-outline">ID: #KYC-90555</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-lg py-md font-body-sm text-on-surface-variant">
+                  Oct 23, 2023 | 09:12
+                </td>
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-xs text-on-surface-variant">
+                    <span class="material-symbols-outlined text-sm"
+                      >credit_card</span
+                    >
+                    <span class="font-body-sm">Driver's License</span>
+                  </div>
+                </td>
+                <td class="px-lg py-md">
+                  <span
+                    class="px-sm py-xs bg-tertiary-fixed text-on-tertiary-fixed text-[11px] font-bold rounded-full uppercase tracking-tighter"
+                    >Verified</span
+                  >
+                </td>
+                <td class="px-lg py-md">
+                  <div class="flex items-center gap-sm">
+                    <div
+                      class="w-16 h-1.5 bg-surface-container-highest rounded-full overflow-hidden"
+                    >
+                      <div class="w-[45%] h-full bg-secondary"></div>
+                    </div>
+                    <span class="font-label-md text-secondary">Medium</span>
+                  </div>
+                </td>
+                <td class="px-lg py-md text-right">
+                  <button
+                    class="text-primary hover:bg-primary-fixed p-sm rounded-full transition-colors"
+                  >
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- Pagination Footer -->
+          <div
+            class="px-lg py-md bg-surface-container-lowest flex justify-between items-center border-t border-outline-variant"
+          >
+            <p class="font-label-md text-outline">
+              Showing 1 to 4 of 1,432 entries
+            </p>
+            <div class="flex gap-xs">
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-container transition-colors"
+              >
+                <span class="material-symbols-outlined text-sm"
+                  >chevron_left</span
+                >
+              </button>
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-label-md"
+              >
+                1
+              </button>
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-container transition-colors font-label-md"
+              >
+                2
+              </button>
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-container transition-colors font-label-md"
+              >
+                3
+              </button>
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-container transition-colors"
+              >
+                <span class="material-symbols-outlined text-sm"
+                  >chevron_right</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Lower Detail Grid (Asymmetric) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-lg mt-xl">
+          <div
+            class="md:col-span-2 glass-card rounded-xl p-lg flex items-center gap-lg"
+          >
+            <div
+              class="w-24 h-24 rounded-lg bg-surface-container flex flex-col items-center justify-center border border-outline-variant"
+            >
+              <span class="material-symbols-outlined text-primary text-4xl"
+                >verified_user</span
+              >
+            </div>
+            <div>
+              <h4 class="font-headline-md text-primary mb-xs">
+                Automated Fraud Engine
+              </h4>
+              <p class="font-body-sm text-on-surface-variant max-w-lg mb-md">
+                Our neural network has analyzed 4,200 data points across the
+                current batch. No significant cross-user anomalies detected in
+                the last 24 hours.
+              </p>
+              <div class="flex gap-md">
+                <div class="flex items-center gap-xs">
+                  <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                  <span class="font-label-md">Biometric Match: 99.1%</span>
+                </div>
+                <div class="flex items-center gap-xs">
+                  <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                  <span class="font-label-md">IP Geolocation: Consistent</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-primary text-on-primary p-lg rounded-xl flex flex-col relative"
+          >
+            <h4
+              class="font-label-md uppercase tracking-widest text-primary-fixed mb-md"
+            >
+              Compliance News
+            </h4>
+            <div class="space-y-md relative z-10">
+              <div class="pb-sm border-b border-on-primary-fixed-variant">
+                <p class="text-[11px] text-secondary-fixed">2 hours ago</p>
+                <p class="font-body-sm font-semibold">
+                  New AML guidelines published for EU markets.
+                </p>
+              </div>
+              <div class="pb-sm">
+                <p class="text-[11px] text-secondary-fixed">Yesterday</p>
+                <p class="font-body-sm font-semibold">
+                  Passport forgery alert: Series 88J-Alpha.
+                </p>
+              </div>
+            </div>
+            <button
+              class="mt-auto text-secondary-fixed font-label-md flex items-center gap-xs"
+            >
+              View Portal
+              <span class="material-symbols-outlined text-sm"
+                >arrow_forward</span
+              >
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <!-- Micro-interaction Script -->
+    <script>
+      document.querySelectorAll("tbody tr").forEach((row) => {
+        row.addEventListener("click", () => {
+          // Mock selection visual
+          document
+            .querySelectorAll("tbody tr")
+            .forEach((r) => r.classList.remove("bg-surface-container-high"));
+          row.classList.add("bg-surface-container-high");
+        });
+      });
+    </script>
+  </body>
+</html>

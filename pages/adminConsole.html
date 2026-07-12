@@ -1,0 +1,729 @@
+<!doctype html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ES Payment | Admin Console</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#dce1ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary": "#ffffff",
+              "secondary-fixed": "#ffdea1",
+              "inverse-on-surface": "#eaf1ff",
+              "on-surface-variant": "#45464f",
+              "on-primary-container": "#808dc2",
+              secondary: "#7a5900",
+              "surface-bright": "#f8f9ff",
+              "tertiary-fixed": "#f9e287",
+              "inverse-primary": "#b7c4fd",
+              background: "#f8f9ff",
+              "tertiary-fixed-dim": "#dcc66e",
+              error: "#ba1a1a",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed": "#071747",
+              "surface-variant": "#d3e4fe",
+              surface: "#f8f9ff",
+              "inverse-surface": "#213145",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed-variant": "#5c4200",
+              "on-tertiary-fixed": "#221b00",
+              "primary-container": "#172554",
+              "on-secondary-container": "#745400",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "surface-container-high": "#dce9ff",
+              outline: "#767680",
+              "surface-dim": "#cbdbf5",
+              "secondary-container": "#fdca60",
+              "outline-variant": "#c6c5d0",
+              primary: "#000f3f",
+              "on-secondary-fixed": "#261900",
+              "on-tertiary-fixed-variant": "#534600",
+              "on-background": "#0b1c30",
+              "tertiary-container": "#bfab56",
+              "on-tertiary-container": "#4b3f00",
+              "primary-fixed-dim": "#b7c4fd",
+              "secondary-fixed-dim": "#f0bf56",
+              "surface-tint": "#4f5c8e",
+              "surface-container-low": "#eff4ff",
+              "on-error": "#ffffff",
+              "on-surface": "#0b1c30",
+              "on-primary-fixed-variant": "#374475",
+              "surface-container": "#e5eeff",
+              tertiary: "#6e5e0d",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              "max-width": "1440px",
+              xl: "32px",
+              lg: "24px",
+              sm: "8px",
+              gutter: "24px",
+              "margin-desktop": "48px",
+              base: "4px",
+              md: "16px",
+              xs: "4px",
+              "margin-mobile": "16px",
+            },
+            fontFamily: {
+              "headline-lg-mobile": ["Inter"],
+              "label-md": ["Inter"],
+              "body-md": ["Inter"],
+              "display-lg": ["Inter"],
+              "body-sm": ["Inter"],
+              "headline-md": ["Inter"],
+              "body-lg": ["Inter"],
+              "headline-lg": ["Inter"],
+            },
+            fontSize: {
+              "headline-lg-mobile": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+              "label-md": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "display-lg": [
+                "48px",
+                {
+                  lineHeight: "56px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+              "headline-lg": [
+                "32px",
+                {
+                  lineHeight: "40px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background text-on-background font-body-md overflow-hidden">
+    <!-- SideNavBar (Execution from JSON) -->
+    <aside
+      class="flex flex-col h-full py-lg px-md h-screen w-64 fixed left-0 top-0 bg-primary dark:bg-primary-container border-r border-outline-variant dark:border-outline z-50"
+    >
+      <div class="mb-xl px-sm">
+        <h1
+          class="font-headline-md text-headline-md font-bold text-secondary-fixed"
+        >
+          ES Payment
+        </h1>
+        <p class="font-body-sm text-body-sm text-primary-fixed opacity-70">
+          Admin Console
+        </p>
+      </div>
+      <nav class="flex-1 space-y-base overflow-y-auto custom-scrollbar">
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container dark:hover:bg-primary transition-colors duration-200 rounded-lg group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="font-body-md">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container dark:hover:bg-primary transition-colors duration-200 rounded-lg group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">receipt_long</span>
+          <span class="font-body-md">Transactions</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container dark:hover:bg-primary transition-colors duration-200 rounded-lg group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">payments</span>
+          <span class="font-body-md">Bill Payments</span>
+        </a>
+        <a
+          class="flex items-center gap-md bg-secondary dark:bg-secondary-fixed text-on-secondary dark:text-on-secondary-fixed rounded-lg px-md py-sm scale-95 active:scale-90 transition-transform"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined"
+            style="font-variation-settings: &quot;FILL&quot; 1"
+            >admin_panel_settings</span
+          >
+          <span class="font-body-md">Admin Console</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container dark:hover:bg-primary transition-colors duration-200 rounded-lg group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">gavel</span>
+          <span class="font-body-md">Compliance</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container dark:hover:bg-primary transition-colors duration-200 rounded-lg group"
+          href="#"
+        >
+          <span class="material-symbols-outlined">help_center</span>
+          <span class="font-body-md">Support</span>
+        </a>
+      </nav>
+      <div class="mt-auto pt-lg">
+        <button
+          class="w-full bg-secondary text-on-secondary py-md rounded-lg font-bold flex items-center justify-center gap-sm hover:opacity-90 active:scale-95 transition-all"
+        >
+          <span class="material-symbols-outlined">add</span>
+          New Transaction
+        </button>
+      </div>
+    </aside>
+    <!-- Main Content Shell -->
+    <main class="ml-64 flex flex-col h-screen relative overflow-hidden">
+      <!-- TopAppBar (Execution from JSON) -->
+      <header
+        class="flex justify-between items-center h-16 px-gutter sticky top-0 bg-surface-container-lowest dark:bg-surface-dim border-b border-outline-variant dark:border-outline z-40"
+      >
+        <div class="flex items-center gap-lg flex-1">
+          <div class="relative w-full max-w-md">
+            <span
+              class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline"
+              >search</span
+            >
+            <input
+              class="w-full pl-xl pr-md py-xs bg-surface-container-low border border-outline-variant rounded-full text-body-sm focus:border-primary focus:ring-0 transition-all"
+              placeholder="Global search users, accounts, entities..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-lg">
+          <div class="flex items-center gap-md">
+            <button
+              class="p-base text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative"
+            >
+              <span class="material-symbols-outlined">notifications</span>
+              <span
+                class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"
+              ></span>
+            </button>
+            <button
+              class="p-base text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors"
+            >
+              <span class="material-symbols-outlined">help</span>
+            </button>
+            <button
+              class="p-base text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors"
+            >
+              <span class="material-symbols-outlined">settings</span>
+            </button>
+          </div>
+          <div class="h-8 w-px bg-outline-variant"></div>
+          <div class="flex items-center gap-sm">
+            <div class="text-right">
+              <p class="text-label-md font-bold text-primary">Alex Mercer</p>
+              <p class="text-[10px] text-outline uppercase tracking-wider">
+                System Architect
+              </p>
+            </div>
+            <img
+              class="w-8 h-8 rounded-full border border-outline-variant object-cover"
+              data-alt="A professional headshot of a corporate executive in a crisp white shirt, clean lighting, high-end studio portrait style, neutral gray background, sharp focus, professional persona."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAta2eNWszv6lBcdovTpCCjzbiMzQYiCYXerew6C6zeNT5zUX80qYMza-Pu566q1Kp1xM5IT_V-JNg8T48cCb1Bn_hp0-JNx_VQBAYZDb6Mtnbwo2oqc3xwfFhbcBsxOEYlOs8z_VyqGdw3OTm8t2uGIEW9lOcdou12yfHV8Nr7dAm0J_Mkz4wh_OMb8kTAzGoDVoEz4rgVn4awriAJ5qoY6S06U-eOzyO00Yiyf8QBNJPC9sH-gaBriw"
+            />
+          </div>
+        </div>
+      </header>
+      <!-- Scrollable Content Canvas -->
+      <div class="flex-1 overflow-y-auto p-lg custom-scrollbar space-y-lg">
+        <!-- Admin Header -->
+        <div class="flex flex-col gap-xs">
+          <h2
+            class="font-headline-lg text-headline-lg text-primary tracking-tight"
+          >
+            Admin Console
+          </h2>
+          <p class="text-body-md text-on-surface-variant">
+            Manage institutional users, operational tiers, and complex system
+            permissions with centralized authority.
+          </p>
+        </div>
+        <!-- Bento Stat Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-md">
+          <div
+            class="glass-panel p-md rounded-xl flex flex-col justify-between"
+          >
+            <div class="flex justify-between items-start">
+              <span class="text-label-md text-outline font-bold uppercase"
+                >System Health</span
+              >
+              <span
+                class="flex items-center gap-xs px-sm py-[2px] bg-green-50 text-green-700 text-[10px] font-bold rounded-full border border-green-100"
+              >
+                <span
+                  class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"
+                ></span>
+                ONLINE
+              </span>
+            </div>
+            <div class="mt-md">
+              <p
+                class="text-display-lg font-display-lg text-primary leading-none"
+              >
+                99.98<span class="text-headline-md">%</span>
+              </p>
+              <p class="text-body-sm text-on-surface-variant mt-sm">
+                Core engine latency: 12ms
+              </p>
+            </div>
+          </div>
+          <div
+            class="glass-panel p-md rounded-xl col-span-1 md:col-span-2 flex flex-col gap-md"
+          >
+            <div class="flex justify-between items-center">
+              <span class="text-label-md text-outline font-bold uppercase"
+                >Account Tiers Overview</span
+              >
+              <button
+                class="text-secondary text-label-md font-bold hover:underline"
+              >
+                View Distribution
+              </button>
+            </div>
+            <div class="flex gap-lg flex-1 items-end">
+              <div class="flex-1 space-y-xs">
+                <div
+                  class="h-24 w-full bg-surface-container-high relative rounded-sm overflow-hidden"
+                >
+                  <div
+                    class="absolute bottom-0 w-full bg-primary-container"
+                    style="height: 45%"
+                  ></div>
+                </div>
+                <p class="text-[10px] font-bold text-center">INDIVIDUAL</p>
+                <p class="text-label-md text-center">1,204</p>
+              </div>
+              <div class="flex-1 space-y-xs">
+                <div
+                  class="h-24 w-full bg-surface-container-high relative rounded-sm overflow-hidden"
+                >
+                  <div
+                    class="absolute bottom-0 w-full bg-secondary"
+                    style="height: 70%"
+                  ></div>
+                </div>
+                <p class="text-[10px] font-bold text-center">CORPORATE</p>
+                <p class="text-label-md text-center">458</p>
+              </div>
+              <div class="flex-1 space-y-xs">
+                <div
+                  class="h-24 w-full bg-surface-container-high relative rounded-sm overflow-hidden"
+                >
+                  <div
+                    class="absolute bottom-0 w-full bg-primary"
+                    style="height: 90%"
+                  ></div>
+                </div>
+                <p class="text-[10px] font-bold text-center">INSTITUTIONAL</p>
+                <p class="text-label-md text-center">212</p>
+              </div>
+            </div>
+          </div>
+          <div class="glass-panel p-md rounded-xl bg-primary text-on-primary">
+            <span
+              class="text-label-md text-primary-fixed-dim font-bold uppercase"
+              >Active User count</span
+            >
+            <div class="mt-md">
+              <p class="text-display-lg font-display-lg leading-none">3,892</p>
+              <div class="flex items-center gap-sm mt-md">
+                <div class="flex -space-x-2">
+                  <img
+                    class="w-6 h-6 rounded-full border border-primary"
+                    data-alt="Close-up portrait of a female financial professional, diverse ethnicity, bright workspace background, professional photography."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq2xfQ_oKTTrX07L--0AMY5kzFaHuozGh5HS7h3flV_wMZ9_-5tCv2X1ahyFeva5R5hC6M6kOL0e8g5xJ21mctGHoksxI81olZnOjJPMH3zP4Y-x6PLbwh4J3PQi_2UH0uvPH2HDqWUiaj8HF9BZRFXDYenqUL_ZVVIsZoIdYAPmcq3CamFQRp1F94Iuhk3GJbumiEVa13ti85MXgqGOs8n_qTPte59ACIUXvrR8cqRb63g7QpktuZlQ"
+                  />
+                  <img
+                    class="w-6 h-6 rounded-full border border-primary"
+                    data-alt="Portrait of a young male stock trader, focused expression, cinematic office lighting, professional photography."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuACYq6jza1H-rQPE20ABZds3BBwEX8WyyyzuwIWeR2FGmQFpB_TtvrzUcL7rRXU_PIUuLQ8cRgLM0kMlsYd5o_Nu_0lJDHvvvU5nP689YuzP5YOb3_saR1akN92knLXEg_z3IgkcxUwPJ8SfAXbjryo8lQJnptq6-WLvhrl26-IiixXFI9toQTC8bALjtmUxn08wV_reEseET-fdfSeoWpqBny4P3PY7IwsMu7CBcUBxGNjbHg9NpS2Bw"
+                  />
+                  <img
+                    class="w-6 h-6 rounded-full border border-primary"
+                    data-alt="Portrait of an older executive woman with glasses, smiling confidently, high-end corporate office setting."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBls4b5PY_ne7CAsvC85O8sGMu7mnVS29yKr21sUaz6mFAuq_NVk4Gtu0FBPne8S8OUeagv0KLIn3jPEY1ROrFbkViqxcESDjvQ0f9qKulP3AlFPYTxQkTXljhy56c1DgFI7bcuzqnIoWinTF93uXO-fOhLavkp5XSF6_qFDjapt5Qgj04qjAS1XUEkcYwrPS-mHl9my_7M9pYpgCMoTjbGvbEqsyga3P-M8JEFwtvc8jCRcpyY06cBew"
+                  />
+                </div>
+                <p class="text-[10px] text-primary-fixed">+12 today</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Content Area: Directory & Sidebar -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
+          <!-- Main Directory Table -->
+          <div
+            class="lg:col-span-8 glass-panel rounded-xl overflow-hidden flex flex-col"
+          >
+            <div
+              class="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low/30"
+            >
+              <h3 class="font-headline-md text-primary">User Directory</h3>
+              <div class="flex gap-sm">
+                <button
+                  class="px-md py-sm border border-outline-variant rounded-lg text-label-md font-bold hover:bg-surface-container-low transition-colors"
+                >
+                  EXPORT CSV
+                </button>
+                <button
+                  class="px-md py-sm bg-primary text-on-primary rounded-lg text-label-md font-bold flex items-center gap-xs hover:opacity-90 transition-all"
+                >
+                  <span class="material-symbols-outlined text-[18px]"
+                    >person_add</span
+                  >
+                  ADD USER
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr
+                    class="bg-primary text-on-primary text-[10px] font-bold uppercase tracking-widest"
+                  >
+                    <th class="px-lg py-sm">User Identity</th>
+                    <th class="px-lg py-sm">Role Designation</th>
+                    <th class="px-lg py-sm">Status</th>
+                    <th class="px-lg py-sm">Last Session</th>
+                    <th class="px-lg py-sm text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                  <!-- Row 1 -->
+                  <tr class="hover:bg-[#FFFBEB] transition-colors group">
+                    <td class="px-lg py-md">
+                      <div class="flex items-center gap-md">
+                        <div
+                          class="w-10 h-10 bg-primary-fixed rounded-full flex items-center justify-center text-primary font-bold text-sm"
+                        >
+                          EM
+                        </div>
+                        <div>
+                          <p class="font-bold text-primary">Elena Markov</p>
+                          <p class="text-body-sm text-outline">
+                            e.markov@goldman.com
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <div class="flex items-center gap-sm">
+                        <span
+                          class="material-symbols-outlined text-secondary text-[20px]"
+                          >security</span
+                        >
+                        <span class="text-body-sm">Compliance Officer</span>
+                      </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-sm py-xs bg-green-50 text-green-700 text-[10px] font-bold rounded-sm border border-green-100"
+                        >ACTIVE</span
+                      >
+                    </td>
+                    <td class="px-lg py-md">
+                      <p class="text-body-sm">Today, 09:42 AM</p>
+                    </td>
+                    <td class="px-lg py-md text-right">
+                      <button
+                        class="p-xs text-outline hover:text-primary transition-colors"
+                      >
+                        <span class="material-symbols-outlined">more_vert</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Row 2 -->
+                  <tr class="hover:bg-[#FFFBEB] transition-colors group">
+                    <td class="px-lg py-md">
+                      <div class="flex items-center gap-md">
+                        <img
+                          class="w-10 h-10 rounded-full object-cover"
+                          data-alt="Corporate headshot of a serious man in a dark suit, modern office background with blue tones, professional lighting, sharp focus."
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNJM6RVoBmkZ_rbSKGV8pAWNq2WpTpK-Rl9eTY57XfgB26PP0qQLqwn47o8w7A_baB4lnMaRokKDtda_D4S0jI5Yi58runvS7oRQdguRfdoloWdms2bxzqAFiGJw-vFeks-hGER5IiJgV4ENBtJs8v6YL2o3Tui9tUzqwsgRQEjkpbRpVWmyAu3ucL2XK8VbaregSc00StS8IYQFxJ5bfI0y4JyFPUR5IxecDeMOmrGsbPrUyXeBYeFQ"
+                        />
+                        <div>
+                          <p class="font-bold text-primary">Julian Thorne</p>
+                          <p class="text-body-sm text-outline">
+                            j.thorne@apexcap.io
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <div class="flex items-center gap-sm">
+                        <span
+                          class="material-symbols-outlined text-primary text-[20px]"
+                          >monitoring</span
+                        >
+                        <span class="text-body-sm">Senior Trader</span>
+                      </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-sm py-xs bg-green-50 text-green-700 text-[10px] font-bold rounded-sm border border-green-100"
+                        >ACTIVE</span
+                      >
+                    </td>
+                    <td class="px-lg py-md">
+                      <p class="text-body-sm">Yesterday, 04:15 PM</p>
+                    </td>
+                    <td class="px-lg py-md text-right">
+                      <button
+                        class="p-xs text-outline hover:text-primary transition-colors"
+                      >
+                        <span class="material-symbols-outlined">more_vert</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Row 3 -->
+                  <tr class="hover:bg-[#FFFBEB] transition-colors group">
+                    <td class="px-lg py-md">
+                      <div class="flex items-center gap-md">
+                        <div
+                          class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center text-outline font-bold text-sm"
+                        >
+                          SW
+                        </div>
+                        <div>
+                          <p class="font-bold text-primary">Sarah Winston</p>
+                          <p class="text-body-sm text-outline">
+                            sarah.w@institutional.net
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <div class="flex items-center gap-sm">
+                        <span
+                          class="material-symbols-outlined text-outline text-[20px]"
+                          >admin_panel_settings</span
+                        >
+                        <span class="text-body-sm">Admin</span>
+                      </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-sm py-xs bg-error-container text-error text-[10px] font-bold rounded-sm border border-red-100"
+                        >SUSPENDED</span
+                      >
+                    </td>
+                    <td class="px-lg py-md">
+                      <p class="text-body-sm">12 Oct, 2023</p>
+                    </td>
+                    <td class="px-lg py-md text-right">
+                      <button
+                        class="p-xs text-outline hover:text-primary transition-colors"
+                      >
+                        <span class="material-symbols-outlined">more_vert</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="p-md bg-surface-container-low/30 border-t border-outline-variant flex justify-between items-center"
+            >
+              <p class="text-body-sm text-outline">
+                Showing 1-3 of 2,105 entries
+              </p>
+              <div class="flex gap-base">
+                <button
+                  class="p-xs border border-outline-variant rounded hover:bg-surface-container-low"
+                >
+                  <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button
+                  class="p-xs border border-outline-variant rounded hover:bg-surface-container-low"
+                >
+                  <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar: Permissions & Actions -->
+          <div class="lg:col-span-4 space-y-lg">
+            <!-- Permissions Presets Panel -->
+            <div class="glass-panel p-lg rounded-xl flex flex-col gap-md">
+              <div class="flex justify-between items-center">
+                <h3 class="font-headline-md text-primary">
+                  Permissions Presets
+                </h3>
+                <span class="material-symbols-outlined text-outline">info</span>
+              </div>
+              <div class="space-y-sm">
+                <div
+                  class="p-md rounded-lg border border-outline-variant hover:border-secondary cursor-pointer transition-all bg-surface-container-lowest"
+                >
+                  <div class="flex justify-between items-start mb-base">
+                    <p class="font-bold text-primary">Full Admin</p>
+                    <span
+                      class="material-symbols-outlined text-secondary"
+                      style="font-variation-settings: &quot;FILL&quot; 1"
+                      >stars</span
+                    >
+                  </div>
+                  <p class="text-body-sm text-on-surface-variant">
+                    Unrestricted access to all core systems, financial rails,
+                    and user databases.
+                  </p>
+                </div>
+                <div
+                  class="p-md rounded-lg border border-outline-variant hover:border-secondary cursor-pointer transition-all bg-surface-container-lowest"
+                >
+                  <div class="flex justify-between items-start mb-base">
+                    <p class="font-bold text-primary">Treasury Ops</p>
+                  </div>
+                  <p class="text-body-sm text-on-surface-variant">
+                    Authorization for capital movement, liquidity management,
+                    and reporting.
+                  </p>
+                </div>
+                <div
+                  class="p-md rounded-lg border border-outline-variant hover:border-secondary cursor-pointer transition-all bg-surface-container-lowest"
+                >
+                  <div class="flex justify-between items-start mb-base">
+                    <p class="font-bold text-primary">Read-Only Auditor</p>
+                  </div>
+                  <p class="text-body-sm text-on-surface-variant">
+                    View-only privileges for compliance logs and transaction
+                    history.
+                  </p>
+                </div>
+              </div>
+              <button
+                class="w-full mt-md py-md bg-secondary text-on-secondary font-bold rounded-lg flex items-center justify-center gap-sm hover:opacity-90 active:scale-95 transition-all"
+              >
+                <span class="material-symbols-outlined">tune</span>
+                Create Custom Role
+              </button>
+            </div>
+            <!-- Security Banner -->
+            <div
+              class="bg-primary-container p-lg rounded-xl text-on-primary-fixed space-y-md relative overflow-hidden"
+            >
+              <div class="relative z-10">
+                <h4 class="font-bold text-body-lg">Security Protocol v4.2</h4>
+                <p class="text-body-sm opacity-80">
+                  Institutional-grade multi-signature authorization is required
+                  for all role changes within this environment.
+                </p>
+                <button
+                  class="mt-md text-secondary-fixed font-bold text-label-md flex items-center gap-xs hover:underline"
+                >
+                  LEARN MORE
+                  <span class="material-symbols-outlined text-[14px]"
+                    >open_in_new</span
+                  >
+                </button>
+              </div>
+              <span
+                class="material-symbols-outlined absolute -bottom-4 -right-4 text-[120px] text-primary opacity-20 pointer-events-none"
+                >verified_user</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- System Status Bar -->
+      <footer
+        class="h-8 bg-surface-container-high border-t border-outline-variant px-gutter flex items-center justify-between text-[10px] font-bold text-outline uppercase tracking-widest"
+      >
+        <div class="flex gap-lg">
+          <span class="flex items-center gap-xs text-green-700">
+            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+            API: OPERATIONAL
+          </span>
+          <span class="flex items-center gap-xs">
+            SERVER: EU-WEST-1 (IP: 192.168.1.1)
+          </span>
+        </div>
+        <div>SESSION EXPIRES IN: 24:12</div>
+      </footer>
+    </main>
+    <script>
+      // Simple Micro-interactions
+      document.querySelectorAll(".glass-panel").forEach((panel) => {
+        panel.addEventListener("mouseenter", () => {
+          panel.style.transform = "translateY(-2px)";
+          panel.style.boxShadow = "0 10px 25px -5px rgba(0, 15, 63, 0.1)";
+          panel.style.transition = "all 0.3s ease";
+        });
+        panel.addEventListener("mouseleave", () => {
+          panel.style.transform = "translateY(0)";
+          panel.style.boxShadow = "none";
+        });
+      });
+    </script>
+  </body>
+</html>

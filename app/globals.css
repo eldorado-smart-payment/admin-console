@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f9ff;
+  --foreground: #0b1c30;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: #000f3f;
+  --color-primary-fixed: #dce1ff;
+  --color-primary-fixed-dim: #b7c4fd;
+  --color-primary-container: #172554;
+  --color-on-primary: #ffffff;
+  --color-on-primary-fixed: #071747;
+  --color-on-primary-fixed-variant: #374475;
+  --color-on-primary-container: #808dc2;
+
+  --color-secondary: #7a5900;
+  --color-secondary-fixed: #ffdea1;
+  --color-secondary-fixed-dim: #f0bf56;
+  --color-secondary-container: #fdca60;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-fixed: #261900;
+  --color-on-secondary-fixed-variant: #5c4200;
+  --color-on-secondary-container: #745400;
+
+  --color-tertiary: #6e5e0d;
+  --color-tertiary-container: #bfab56;
+  --color-tertiary-fixed: #f9e287;
+  --color-tertiary-fixed-dim: #dcc66e;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #4b3f00;
+  --color-on-tertiary-fixed: #221b00;
+  --color-on-tertiary-fixed-variant: #534600;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --color-surface: #f8f9ff;
+  --color-surface-dim: #cbdbf5;
+  --color-surface-bright: #f8f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #eff4ff;
+  --color-surface-container: #e5eeff;
+  --color-surface-container-high: #dce9ff;
+  --color-surface-container-highest: #d3e4fe;
+  --color-surface-variant: #d3e4fe;
+  --color-on-surface: #0b1c30;
+  --color-on-surface-variant: #45464f;
+  --color-inverse-surface: #213145;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-inverse-primary: #b7c4fd;
+
+  --color-outline: #767680;
+  --color-outline-variant: #c6c5d0;
+  --color-surface-tint: #4f5c8e;
+
+  --font-sans: system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: Excalifont, Xiaolai, ui-monospace, monospace;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 56px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 40px;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 600;
+
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-body-sm--font-weight: 400;
+
+  --text-label-md: 12px;
+  --text-label-md--line-height: 16px;
+  --text-label-md--letter-spacing: 0.05em;
+  --text-label-md--font-weight: 600;
+
+  --radius-default: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+.data-font {
+  font-family: var(--font-mono);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.bento-card {
+  transition: all 0.2s ease;
+  border: 1px solid var(--color-outline-variant);
+}
+
+.bento-card:hover {
+  border-color: var(--color-secondary);
+  box-shadow: 0px 4px 12px rgba(0, 15, 63, 0.05);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.status-chip {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}

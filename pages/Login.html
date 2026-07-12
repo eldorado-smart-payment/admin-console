@@ -1,0 +1,475 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Login | ES Payment Admin Console</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#dcc66e",
+              "on-secondary-fixed-variant": "#5c4200",
+              "on-primary-fixed": "#071747",
+              "tertiary-fixed": "#f9e287",
+              "secondary-container": "#fdca60",
+              "on-tertiary-container": "#4b3f00",
+              "secondary-fixed-dim": "#f0bf56",
+              "surface-container-high": "#dce9ff",
+              "on-tertiary-fixed-variant": "#534600",
+              "on-tertiary": "#ffffff",
+              "on-secondary-fixed": "#261900",
+              "tertiary-container": "#bfab56",
+              "error-container": "#ffdad6",
+              "surface-container": "#e5eeff",
+              "on-secondary": "#ffffff",
+              "primary-container": "#172554",
+              "on-surface-variant": "#45464f",
+              "surface-dim": "#cbdbf5",
+              surface: "#f8f9ff",
+              "secondary-fixed": "#ffdea1",
+              "on-surface": "#0b1c30",
+              "inverse-primary": "#b7c4fd",
+              secondary: "#7a5900",
+              primary: "#000f3f",
+              "on-primary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed-dim": "#b7c4fd",
+              "inverse-on-surface": "#eaf1ff",
+              error: "#ba1a1a",
+              "on-primary-fixed-variant": "#374475",
+              background: "#f8f9ff",
+              "on-tertiary-fixed": "#221b00",
+              "on-primary-container": "#808dc2",
+              tertiary: "#6e5e0d",
+              "surface-tint": "#4f5c8e",
+              outline: "#767680",
+              "surface-variant": "#d3e4fe",
+              "surface-container-highest": "#d3e4fe",
+              "on-secondary-container": "#745400",
+              "primary-fixed": "#dce1ff",
+              "on-error-container": "#93000a",
+              "on-error": "#ffffff",
+              "on-background": "#0b1c30",
+              "inverse-surface": "#213145",
+              "surface-container-low": "#eff4ff",
+              "surface-bright": "#f8f9ff",
+              "outline-variant": "#c6c5d0",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              xl: "32px",
+              lg: "24px",
+              xs: "4px",
+              gutter: "24px",
+              base: "4px",
+              sm: "8px",
+              "max-width": "1440px",
+              "margin-mobile": "16px",
+              md: "16px",
+              "margin-desktop": "48px",
+            },
+            fontFamily: {
+              "label-md": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "headline-lg": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "headline-lg-mobile": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "display-lg": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "body-md": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "body-sm": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "headline-md": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "body-lg": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+            },
+            fontSize: {
+              "label-md": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-lg": [
+                "32px",
+                {
+                  lineHeight: "40px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-lg-mobile": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+              "display-lg": [
+                "48px",
+                {
+                  lineHeight: "56px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+      }
+      .login-card {
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 25px -5px rgba(0, 15, 63, 0.1);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background text-on-background font-body-md min-h-screen flex items-center justify-center relative overflow-hidden"
+  >
+    <!-- Background Hero Layer -->
+    <div class="fixed inset-0 z-0">
+      <div
+        class="w-full h-full bg-gradient-to-b from-surface-container-low to-background"
+      ></div>
+    </div>
+    <!-- Main Content Canvas -->
+    <main class="relative z-10 w-full max-w-md px-margin-mobile md:px-0">
+      <!-- Brand Header Section -->
+      <div class="text-center mb-xl">
+        <div
+          class="inline-flex items-center justify-center bg-primary p-md rounded mb-md shadow-lg"
+        >
+          <span
+            class="material-symbols-outlined text-secondary text-4xl"
+            style="font-variation-settings: &quot;FILL&quot; 1"
+            >account_balance</span
+          >
+        </div>
+        <h1
+          class="font-headline-lg text-headline-lg text-primary tracking-tight uppercase"
+        >
+          ES Payment Pro
+        </h1>
+        <p
+          class="font-label-md text-label-md text-secondary uppercase tracking-[0.3em] mt-sm opacity-80"
+        >
+          Admin Console
+        </p>
+      </div>
+      <!-- Login Card -->
+      <div
+        class="login-card glass-panel rounded-lg p-lg md:p-xl transition-all duration-300 border-outline-variant"
+      >
+        <div class="block" id="login-step">
+          <h2
+            class="font-headline-md text-headline-md text-primary mb-sm tracking-tight"
+          >
+            Secure Sign In
+          </h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">
+            Access your professional trading and compliance terminal.
+          </p>
+          <form
+            class="space-y-md"
+            onsubmit="
+              event.preventDefault();
+              document.getElementById('login-step').classList.add('hidden');
+              document.getElementById('mfa-step').classList.remove('hidden');
+            "
+          >
+            <!-- Email/Username -->
+            <div class="space-y-xs">
+              <label
+                class="font-label-md text-label-md text-on-surface opacity-70"
+                for="username"
+                >Email Address</label
+              >
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]"
+                  >person</span
+                >
+                <input
+                  class="w-full pl-10 pr-4 py-3 bg-surface border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-sm"
+                  id="username"
+                  name="username"
+                  placeholder="name@company.com"
+                  required=""
+                  type="text"
+                />
+              </div>
+            </div>
+            <!-- Password -->
+            <div class="space-y-xs">
+              <div class="flex justify-between items-center">
+                <label
+                  class="font-label-md text-label-md text-on-surface opacity-70"
+                  for="password"
+                  >Password</label
+                >
+                <a
+                  class="font-label-md text-label-md text-secondary hover:underline"
+                  href="#"
+                  >Forgot Password?</a
+                >
+              </div>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]"
+                  >lock</span
+                >
+                <input
+                  class="w-full pl-10 pr-4 py-3 bg-surface border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-sm"
+                  id="password"
+                  name="password"
+                  placeholder="••••••••••••"
+                  required=""
+                  type="password"
+                />
+              </div>
+            </div>
+            <!-- Primary CTA -->
+            <button
+              class="w-full bg-secondary hover:bg-on-secondary-fixed-variant text-on-secondary font-label-md text-label-md py-4 rounded-lg uppercase tracking-[0.2em] shadow-lg hover:shadow-xl transition-all active:scale-[0.98] mt-lg"
+              type="submit"
+            >
+              Continue to Authentication
+            </button>
+          </form>
+        </div>
+        <!-- MFA Step (Hidden by Default) -->
+        <div class="hidden" id="mfa-step">
+          <button
+            class="flex items-center text-primary font-label-md text-label-md mb-md hover:underline"
+            onclick="
+              document.getElementById('mfa-step').classList.add('hidden');
+              document.getElementById('login-step').classList.remove('hidden');
+            "
+          >
+            <span class="material-symbols-outlined text-[18px] mr-xs"
+              >arrow_back</span
+            >
+            Back
+          </button>
+          <h2 class="font-headline-md text-headline-md text-primary mb-sm">
+            Multi-Factor Authentication
+          </h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">
+            Enter the 6-digit code sent to your registered security device.
+          </p>
+          <form class="space-y-md">
+            <div class="flex justify-between gap-2 mb-md">
+              <input
+                class="w-12 h-14 text-center text-headline-md font-headline-md bg-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none"
+                maxlength="1"
+                type="text"
+              />
+              <input
+                class="w-12 h-14 text-center text-headline-md font-headline-md bg-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none"
+                maxlength="1"
+                type="text"
+              />
+              <input
+                class="w-12 h-14 text-center text-headline-md font-headline-md bg-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none"
+                maxlength="1"
+                type="text"
+              />
+              <input
+                class="w-12 h-14 text-center text-headline-md font-headline-md bg-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none"
+                maxlength="1"
+                type="text"
+              />
+              <input
+                class="w-12 h-14 text-center text-headline-md font-headline-md bg-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none"
+                maxlength="1"
+                type="text"
+              />
+              <input
+                class="w-12 h-14 text-center text-headline-md font-headline-md bg-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none"
+                maxlength="1"
+                type="text"
+              />
+            </div>
+            <button
+              class="w-full bg-primary text-on-primary font-label-md text-label-md py-4 rounded uppercase tracking-widest shadow-sm transition-all active:scale-[0.98]"
+              type="button"
+            >
+              Verify Identity
+            </button>
+            <div class="text-center mt-md">
+              <button
+                class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors"
+                type="button"
+              >
+                Didn't receive a code? Resend
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Compliance & Links Footer -->
+      <div class="mt-lg flex flex-col items-center space-y-md">
+        <div
+          class="flex items-center space-x-md text-outline font-label-md text-label-md"
+        >
+          <a class="hover:text-primary transition-colors" href="#"
+            >Privacy Policy</a
+          >
+          <span class="w-1 h-1 bg-outline rounded-full"></span>
+          <a class="hover:text-primary transition-colors" href="#"
+            >Terms of Service</a
+          >
+          <span class="w-1 h-1 bg-outline rounded-full"></span>
+          <a class="hover:text-primary transition-colors" href="#"
+            >Contact Support</a
+          >
+        </div>
+        <div
+          class="flex items-center text-outline font-label-md text-[10px] space-x-xs uppercase tracking-widest opacity-60"
+        >
+          <span class="material-symbols-outlined text-[16px]"
+            >verified_user</span
+          >
+          <span>Protected by 256-bit Institutional-Grade Encryption</span>
+        </div>
+      </div>
+    </main>
+    <!-- Visual Accents -->
+    <div class="fixed bottom-0 right-0 p-xl hidden md:block">
+      <div class="flex flex-col items-end opacity-20">
+        <span
+          class="font-display-lg text-primary select-none pointer-events-none"
+          >ES Payment</span
+        >
+        <span
+          class="font-headline-md text-secondary select-none pointer-events-none"
+          >PRO</span
+        >
+      </div>
+    </div>
+    <script>
+      // Simple micro-interaction for input fields
+      document.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("focus", () => {
+          input.parentElement.classList.add("scale-[1.01]");
+        });
+        input.addEventListener("blur", () => {
+          input.parentElement.classList.remove("scale-[1.01]");
+        });
+      });
+
+      // Simple MFA input auto-advance
+      const mfaInputs = document.querySelectorAll("#mfa-step input");
+      mfaInputs.forEach((input, index) => {
+        input.addEventListener("keyup", (e) => {
+          if (e.target.value.length === 1 && index < mfaInputs.length - 1) {
+            mfaInputs[index + 1].focus();
+          }
+          if (e.key === "Backspace" && index > 0) {
+            mfaInputs[index - 1].focus();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

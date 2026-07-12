@@ -1,0 +1,793 @@
+<!doctype html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ES Payment Terminal - Operational Monitoring</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind Config with New Design Theme -->
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#dce1ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary": "#ffffff",
+              "secondary-fixed": "#ffdea1",
+              "inverse-on-surface": "#eaf1ff",
+              "on-surface-variant": "#45464f",
+              "on-primary-container": "#808dc2",
+              secondary: "#7a5900",
+              "surface-bright": "#f8f9ff",
+              "tertiary-fixed": "#f9e287",
+              "inverse-primary": "#b7c4fd",
+              background: "#f8f9ff",
+              "tertiary-fixed-dim": "#dcc66e",
+              error: "#ba1a1a",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed": "#071747",
+              "surface-variant": "#d3e4fe",
+              surface: "#f8f9ff",
+              "inverse-surface": "#213145",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed-variant": "#5c4200",
+              "on-tertiary-fixed": "#221b00",
+              "primary-container": "#172554",
+              "on-secondary-container": "#745400",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "surface-container-high": "#dce9ff",
+              outline: "#767680",
+              "surface-dim": "#cbdbf5",
+              "secondary-container": "#fdca60",
+              "outline-variant": "#c6c5d0",
+              primary: "#000f3f",
+              "on-secondary-fixed": "#261900",
+              "on-tertiary-fixed-variant": "#534600",
+              "on-background": "#0b1c30",
+              "tertiary-container": "#bfab56",
+              "on-tertiary-container": "#4b3f00",
+              "primary-fixed-dim": "#b7c4fd",
+              "secondary-fixed-dim": "#f0bf56",
+              "surface-tint": "#4f5c8e",
+              "surface-container-low": "#eff4ff",
+              "on-error": "#ffffff",
+              "on-surface": "#0b1c30",
+              "on-primary-fixed-variant": "#374475",
+              "surface-container": "#e5eeff",
+              tertiary: "#6e5e0d",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              "max-width": "1440px",
+              xl: "32px",
+              lg: "24px",
+              sm: "8px",
+              gutter: "24px",
+              "margin-desktop": "48px",
+              base: "4px",
+              md: "16px",
+              xs: "4px",
+              "margin-mobile": "16px",
+            },
+            fontFamily: {
+              "display-lg": ["Inter"],
+              "body-md": ["Inter"],
+              "headline-lg-mobile": ["Inter"],
+              "headline-lg": ["Inter"],
+              "headline-md": ["Inter"],
+              "label-md": ["Inter"],
+              "body-sm": ["Inter"],
+              "body-lg": ["Inter"],
+            },
+            fontSize: {
+              "display-lg": [
+                "48px",
+                {
+                  lineHeight: "56px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "headline-lg-mobile": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+              "headline-lg": [
+                "32px",
+                {
+                  lineHeight: "40px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+              "label-md": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .data-font {
+        font-family: "JetBrains Mono", monospace;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      .bento-card {
+        transition: all 0.2s ease;
+        border: 1px solid #c6c5d0;
+      }
+      .bento-card:hover {
+        border-color: #7a5900;
+        box-shadow: 0px 4px 12px rgba(0, 15, 63, 0.05);
+      }
+    </style>
+  </head>
+  <body class="bg-surface-container text-on-surface">
+    <!-- SideNavBar Anchor -->
+    <aside
+      class="fixed left-0 top-0 h-full w-64 flex flex-col bg-primary border-r border-outline-variant z-40"
+    >
+      <div class="p-lg">
+        <div class="flex items-center gap-sm">
+          <div
+            class="w-8 h-8 bg-secondary-container rounded-sm flex items-center justify-center text-on-secondary-container"
+          >
+            <span class="material-symbols-outlined text-[20px] font-bold"
+              >analytics</span
+            >
+          </div>
+          <div>
+            <h1 class="font-headline-md text-lg font-bold text-on-primary">
+              ES Payment
+            </h1>
+            <p
+              class="text-[10px] uppercase tracking-widest text-on-primary-fixed-variant font-bold"
+            >
+              Admin Console
+            </p>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 px-md py-sm space-y-1">
+        <a
+          class="flex items-center gap-md px-md py-sm rounded-lg text-secondary-container font-bold border-r-4 border-secondary-container bg-white/10 transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="font-body-md text-body-sm">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-md px-md py-sm rounded-lg text-on-primary-fixed-variant hover:text-white hover:bg-white/5 transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+          <span class="font-body-md text-body-sm">Transactions</span>
+        </a>
+        <a
+          class="flex items-center gap-md px-md py-sm rounded-lg text-on-primary-fixed-variant hover:text-white hover:bg-white/5 transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">payments</span>
+          <span class="font-body-md text-body-sm">Bill Payments</span>
+        </a>
+        <a
+          class="flex items-center gap-md px-md py-sm rounded-lg text-on-primary-fixed-variant hover:text-white hover:bg-white/5 transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">manage_accounts</span>
+          <span class="font-body-md text-body-sm">Admin Console</span>
+        </a>
+        <a
+          class="flex items-center gap-md px-md py-sm rounded-lg text-on-primary-fixed-variant hover:text-white hover:bg-white/5 transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">verified_user</span>
+          <span class="font-body-md text-body-sm">Compliance</span>
+        </a>
+        <a
+          class="flex items-center gap-md px-md py-sm rounded-lg text-on-primary-fixed-variant hover:text-white hover:bg-white/5 transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">support_agent</span>
+          <span class="font-body-md text-body-sm">Support</span>
+        </a>
+      </nav>
+      <div class="px-md py-lg border-t border-white/10 mt-auto">
+        <button
+          class="w-full bg-secondary text-on-secondary py-md rounded-lg font-bold flex items-center justify-center gap-sm hover:opacity-90 active:scale-[0.98] transition-all"
+        >
+          <span class="material-symbols-outlined">send</span>
+          Quick Transfer
+        </button>
+        <div class="mt-lg space-y-1">
+          <a
+            class="flex items-center gap-md px-md py-sm rounded-lg text-on-primary-fixed-variant hover:text-white hover:bg-white/5 transition-colors"
+            href="#"
+          >
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-body-md text-body-sm">Settings</span>
+          </a>
+          <a
+            class="flex items-center gap-md px-md py-sm rounded-lg text-on-primary-fixed-variant hover:text-white hover:bg-white/5 transition-colors"
+            href="#"
+          >
+            <span class="material-symbols-outlined">logout</span>
+            <span class="font-body-md text-body-sm">Logout</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+    <!-- TopNavBar Anchor -->
+    <header
+      class="fixed top-0 left-64 right-0 z-30 bg-primary shadow-sm border-b border-white/10 h-16 flex justify-between items-center px-lg py-sm"
+    >
+      <div class="flex items-center gap-lg flex-1">
+        <div class="relative w-96">
+          <span
+            class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-primary-fixed-variant"
+            >search</span
+          >
+          <input
+            class="w-full pl-xl pr-md py-sm bg-white/5 border border-white/10 rounded-lg text-white placeholder-on-primary-fixed-variant focus:ring-2 focus:ring-secondary-container focus:border-secondary-container font-body-sm transition-all"
+            placeholder="Search accounts, trades, or entities..."
+            type="text"
+          />
+        </div>
+      </div>
+      <div class="flex items-center gap-lg">
+        <div class="flex items-center gap-md">
+          <button
+            class="p-sm text-on-primary-fixed-variant hover:text-white transition-colors relative"
+          >
+            <span class="material-symbols-outlined">notifications</span>
+            <span
+              class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"
+            ></span>
+          </button>
+          <button
+            class="p-sm text-on-primary-fixed-variant hover:text-white transition-colors"
+          >
+            <span class="material-symbols-outlined">help_outline</span>
+          </button>
+        </div>
+        <button
+          class="bg-secondary-container text-on-secondary-container px-lg py-sm rounded-lg font-bold text-body-sm hover:opacity-90 transition-opacity"
+        >
+          New Transaction
+        </button>
+        <div class="flex items-center gap-sm pl-lg border-l border-white/10">
+          <div class="text-right">
+            <p class="font-bold text-body-sm leading-none text-white">
+              Alexander Wright
+            </p>
+            <p class="text-label-md text-on-primary-fixed-variant">
+              Global Treasurer
+            </p>
+          </div>
+          <img
+            alt="User profile"
+            class="w-10 h-10 rounded-full border border-white/20 object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXazJB9Wj7hlfiTNxDKbuLwATEu149bsD4i9F1qeQlMUZoMAqtBkf0n9BFg9n62GnRdkUq3iF_OQo3nUsK3F-u_Qnm16p5BIBQ6nXG9HGxpeD2ZhkPVaBciGY08EfdeBPK11W-woimRKeFTeU2xX-PdnXtoWoX5V3t0YeUTmJ-4Dar5fY9rUR_Lef_1IsUAc3mmmtPcAFeeWdBi9Mi2K-PztDWsq7HHEHLpXYkerwqOiLPvzSwen7JeQ"
+          />
+        </div>
+      </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="ml-64 mt-16 p-lg min-h-screen">
+      <div class="max-w-[1440px] mx-auto space-y-lg">
+        <!-- Dashboard Header -->
+        <section
+          class="flex flex-col md:flex-row justify-between items-start md:items-end gap-lg pt-sm"
+        >
+          <div>
+            <h2 class="font-headline-lg text-headline-lg text-primary">
+              Operational Monitoring
+            </h2>
+            <p class="font-body-lg text-on-surface-variant">
+              Real-time tracking of KYC submissions and system webhook events.
+            </p>
+          </div>
+          <div class="flex gap-md">
+            <button
+              class="flex items-center gap-sm bg-surface-container-lowest border border-outline-variant px-lg py-md rounded-lg font-bold hover:bg-surface-container-low transition-colors"
+            >
+              <span class="material-symbols-outlined">person_add</span>
+              Add User
+            </button>
+            <button
+              class="flex items-center gap-sm bg-surface-container-lowest border border-outline-variant px-lg py-md rounded-lg font-bold hover:bg-surface-container-low transition-colors"
+            >
+              <span class="material-symbols-outlined">receipt_long</span>
+              Pay Bill
+            </button>
+            <button
+              class="flex items-center gap-sm bg-secondary-container text-on-secondary-container px-lg py-md rounded-lg font-bold hover:opacity-90 transition-opacity shadow-sm"
+            >
+              <span class="material-symbols-outlined">add_circle</span>
+              New Transaction
+            </button>
+          </div>
+        </section>
+        <!-- Operational Bento Grid -->
+        <div class="grid grid-cols-12 gap-lg">
+          <!-- Daily Inflow/Outflow Cards - Row 1 -->
+          <div
+            class="col-span-12 lg:col-span-6 bg-surface-container-lowest bento-card rounded-xl p-lg flex flex-col justify-between border border-outline-variant"
+          >
+            <div class="flex justify-between items-start mb-md">
+              <p
+                class="text-label-md text-on-surface-variant font-bold uppercase tracking-wider"
+              >
+                Daily Transaction Inflow
+              </p>
+              <span class="material-symbols-outlined text-on-surface-variant"
+                >trending_up</span
+              >
+            </div>
+            <div class="flex flex-col">
+              <h4 class="font-headline-md text-headline-md text-primary">
+                ₦4,250,000.00
+              </h4>
+              <div class="flex items-center gap-xs mt-sm text-[#2E7D32]">
+                <span class="material-symbols-outlined text-body-md"
+                  >trending_up</span
+                >
+                <span class="data-font text-label-md font-bold"
+                  >+12.4% vs yesterday</span
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-span-12 lg:col-span-6 bg-surface-container-lowest bento-card rounded-xl p-lg flex flex-col justify-between border border-outline-variant"
+          >
+            <div class="flex justify-between items-start mb-md">
+              <p
+                class="text-label-md text-on-surface-variant font-bold uppercase tracking-wider"
+              >
+                Daily Transaction Outflow
+              </p>
+              <span class="material-symbols-outlined text-on-surface-variant"
+                >trending_down</span
+              >
+            </div>
+            <div class="flex flex-col">
+              <h4 class="font-headline-md text-headline-md text-primary">
+                ₦1,820,000.00
+              </h4>
+              <div class="flex items-center gap-xs mt-sm text-error">
+                <span class="material-symbols-outlined text-body-md"
+                  >trending_down</span
+                >
+                <span class="data-font text-label-md font-bold"
+                  >-5.2% vs yesterday</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Recent KYC Submissions - Row 2 -->
+          <div
+            class="col-span-12 lg:col-span-6 bg-surface-container-lowest bento-card rounded-xl overflow-hidden flex flex-col"
+          >
+            <div
+              class="p-lg border-b border-outline-variant flex justify-between items-center"
+            >
+              <h4 class="font-headline-md text-lg text-primary">
+                Recent KYC Submissions
+              </h4>
+              <a
+                class="text-secondary font-bold text-label-md hover:underline"
+                href="#"
+                >View Queue</a
+              >
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="bg-surface-container-low">
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      User Name
+                    </th>
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      Type
+                    </th>
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td class="px-lg py-md text-body-sm font-bold text-primary">
+                      Marcus Holloway
+                    </td>
+                    <td
+                      class="px-lg py-md text-body-sm text-on-surface-variant"
+                    >
+                      NIN Verification
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-full bg-[#FFF3E0] text-[#EF6C00] text-[10px] font-bold uppercase"
+                        >Pending</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td class="px-lg py-md text-body-sm font-bold text-primary">
+                      Elena Rodriguez
+                    </td>
+                    <td
+                      class="px-lg py-md text-body-sm text-on-surface-variant"
+                    >
+                      Intl. Passport
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-full bg-[#E8F5E9] text-[#2E7D32] text-[10px] font-bold uppercase"
+                        >Verified</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td class="px-lg py-md text-body-sm font-bold text-primary">
+                      Zhang Wei
+                    </td>
+                    <td
+                      class="px-lg py-md text-body-sm text-on-surface-variant"
+                    >
+                      Govt ID Card
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-full bg-error-container text-error text-[10px] font-bold uppercase"
+                        >Flagged</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td class="px-lg py-md text-body-sm font-bold text-primary">
+                      Sarah Jenkins
+                    </td>
+                    <td
+                      class="px-lg py-md text-body-sm text-on-surface-variant"
+                    >
+                      NIN Verification
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-full bg-[#E8F5E9] text-[#2E7D32] text-[10px] font-bold uppercase"
+                        >Verified</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Latest Webhook History - Row 2 -->
+          <div
+            class="col-span-12 lg:col-span-6 bg-surface-container-lowest bento-card rounded-xl overflow-hidden flex flex-col"
+          >
+            <div
+              class="p-lg border-b border-outline-variant flex justify-between items-center"
+            >
+              <div class="flex items-center gap-sm">
+                <h4 class="font-headline-md text-lg text-primary">
+                  Latest Webhook History
+                </h4>
+                <span
+                  class="px-md py-xs rounded-full bg-primary text-on-primary text-[10px] font-bold"
+                  >LIVE</span
+                >
+              </div>
+              <a
+                class="text-secondary font-bold text-label-md hover:underline"
+                href="#"
+                >Debug Console</a
+              >
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="bg-surface-container-low">
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      Event Type
+                    </th>
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      Timestamp
+                    </th>
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      HTTP Code
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="px-lg py-md data-font text-body-sm font-bold text-primary"
+                    >
+                      payment.success
+                    </td>
+                    <td
+                      class="px-lg py-md text-body-sm text-on-surface-variant"
+                    >
+                      2023-10-28 14:22:05
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-lg bg-surface-container text-[#2E7D32] text-[11px] font-bold data-font border border-[#2E7D32]/20"
+                        >200 OK</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="px-lg py-md data-font text-body-sm font-bold text-primary"
+                    >
+                      kyc.verified
+                    </td>
+                    <td
+                      class="px-lg py-md text-body-sm text-on-surface-variant"
+                    >
+                      2023-10-28 14:21:40
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-lg bg-surface-container text-[#2E7D32] text-[11px] font-bold data-font border border-[#2E7D32]/20"
+                        >200 OK</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="px-lg py-md data-font text-body-sm font-bold text-primary"
+                    >
+                      transfer.failed
+                    </td>
+                    <td
+                      class="px-lg py-md text-body-sm text-on-surface-variant"
+                    >
+                      2023-10-28 14:18:12
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-lg bg-error-container text-error text-[11px] font-bold data-font border border-error/20"
+                        >400 Error</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="px-lg py-md data-font text-body-sm font-bold text-primary"
+                    >
+                      payout.created
+                    </td>
+                    <td
+                      class="px-lg py-md text-body-sm text-on-surface-variant"
+                    >
+                      2023-10-28 14:15:33
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-lg bg-surface-container text-[#2E7D32] text-[11px] font-bold data-font border border-[#2E7D32]/20"
+                        >201 Created</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Recent Transactions - Row 3 -->
+          <div
+            class="col-span-12 bg-surface-container-lowest bento-card rounded-xl overflow-hidden flex flex-col"
+          >
+            <div
+              class="p-lg border-b border-outline-variant flex justify-between items-center"
+            >
+              <h4 class="font-headline-md text-lg text-primary">
+                Recent Transactions
+              </h4>
+              <div class="flex items-center gap-md">
+                <button class="text-on-surface-variant hover:text-primary">
+                  <span class="material-symbols-outlined">filter_list</span>
+                </button>
+                <a
+                  class="text-secondary font-bold text-label-md hover:underline"
+                  href="#"
+                  >Export CSV</a
+                >
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="bg-surface-container-low">
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      Date
+                    </th>
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      Entity / Reference
+                    </th>
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="px-lg py-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider text-right"
+                    >
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="px-lg py-md data-font text-body-sm text-on-surface-variant"
+                    >
+                      2023-10-28
+                    </td>
+                    <td class="px-lg py-md">
+                      <div class="flex flex-col">
+                        <span class="font-bold text-body-sm text-primary"
+                          >Goldman Sachs Int.</span
+                        >
+                        <span class="text-label-md text-on-surface-variant"
+                          >SWIFT #TRX-99210</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-full bg-[#E8F5E9] text-[#2E7D32] text-[10px] font-bold uppercase"
+                        >Settled</span
+                      >
+                    </td>
+                    <td
+                      class="px-lg py-md text-right data-font font-bold text-primary"
+                    >
+                      -$2,400,000.00
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="px-lg py-md data-font text-body-sm text-on-surface-variant"
+                    >
+                      2023-10-27
+                    </td>
+                    <td class="px-lg py-md">
+                      <div class="flex flex-col">
+                        <span class="font-bold text-body-sm text-primary"
+                          >AWS Cloud Infrastructure</span
+                        >
+                        <span class="text-label-md text-on-surface-variant"
+                          >INV-2023-09</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-full bg-[#E8F5E9] text-[#2E7D32] text-[10px] font-bold uppercase"
+                        >Settled</span
+                      >
+                    </td>
+                    <td
+                      class="px-lg py-md text-right data-font font-bold text-primary"
+                    >
+                      -$42,150.00
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="px-lg py-md data-font text-body-sm text-on-surface-variant"
+                    >
+                      2023-10-27
+                    </td>
+                    <td class="px-lg py-md">
+                      <div class="flex flex-col">
+                        <span class="font-bold text-body-sm text-primary"
+                          >Inbound WIRE - Oracle Corp</span
+                        >
+                        <span class="text-label-md text-on-surface-variant"
+                          >REF: LICENSE_FY24</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        class="px-md py-xs rounded-full bg-[#FFF3E0] text-[#EF6C00] text-[10px] font-bold uppercase"
+                        >Processing</span
+                      >
+                    </td>
+                    <td
+                      class="px-lg py-md text-right data-font font-bold text-green-600"
+                    >
+                      +$850,000.00
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="p-md bg-surface-container-low text-center">
+              <button
+                class="text-secondary font-bold text-body-sm hover:underline"
+              >
+                View All Transactions
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      // Atmospheric fade-in
+      window.addEventListener("DOMContentLoaded", () => {
+        document.body.style.opacity = "0";
+        document.body.style.transition = "opacity 0.6s ease-out";
+        requestAnimationFrame(() => {
+          document.body.style.opacity = "1";
+        });
+      });
+    </script>
+  </body>
+</html>

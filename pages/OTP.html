@@ -1,0 +1,583 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ES Payment | Secure OTP Verification</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        display: inline-block;
+        line-height: 1;
+        vertical-align: middle;
+      }
+
+      /* Custom animation for the verification dots/success */
+      @keyframes pulse-gold {
+        0% {
+          box-shadow: 0 0 0 0 rgba(253, 202, 96, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(253, 202, 96, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(253, 202, 96, 0);
+        }
+      }
+      .animate-pulse-gold {
+        animation: pulse-gold 2s infinite;
+      }
+
+      /* OTP Input hide arrows */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+
+      /* Glassmorphism utility */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed-dim": "#b7c4fd",
+              "on-tertiary-fixed": "#221b00",
+              secondary: "#7a5900",
+              "on-secondary-fixed-variant": "#5c4200",
+              "tertiary-container": "#bfab56",
+              "secondary-fixed": "#ffdea1",
+              tertiary: "#6e5e0d",
+              "inverse-primary": "#b7c4fd",
+              "tertiary-fixed-dim": "#dcc66e",
+              "surface-variant": "#d3e4fe",
+              "surface-dim": "#cbdbf5",
+              "on-primary": "#ffffff",
+              error: "#ba1a1a",
+              "on-secondary-container": "#745400",
+              "secondary-container": "#fdca60",
+              "on-surface-variant": "#45464f",
+              "on-surface": "#0b1c30",
+              "surface-tint": "#4f5c8e",
+              "primary-fixed": "#dce1ff",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed-dim": "#f0bf56",
+              "surface-container": "#e5eeff",
+              primary: "#000f3f",
+              outline: "#767680",
+              "outline-variant": "#c6c5d0",
+              "on-secondary-fixed": "#261900",
+              "primary-container": "#172554",
+              "on-primary-container": "#808dc2",
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-primary-fixed": "#071747",
+              "on-background": "#0b1c30",
+              "inverse-surface": "#213145",
+              "surface-container-low": "#eff4ff",
+              surface: "#f8f9ff",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container-high": "#dce9ff",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#534600",
+              background: "#f8f9ff",
+              "on-tertiary": "#ffffff",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary-container": "#4b3f00",
+              "tertiary-fixed": "#f9e287",
+              "on-primary-fixed-variant": "#374475",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              gutter: "24px",
+              "margin-desktop": "48px",
+              "margin-mobile": "16px",
+              xs: "4px",
+              "max-width": "1440px",
+              xl: "32px",
+              sm: "8px",
+              base: "4px",
+              md: "16px",
+              lg: "24px",
+            },
+            fontFamily: {
+              "display-lg": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "body-md": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "body-sm": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "body-lg": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "label-md": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "headline-lg": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "headline-lg-mobile": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+              "headline-md": [
+                "system-ui",
+                "BlinkMacSystemFont",
+                "-apple-system",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica",
+                "Arial",
+                "sans-serif",
+              ],
+            },
+            fontSize: {
+              "display-lg": [
+                "48px",
+                {
+                  lineHeight: "56px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+              "label-md": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-lg": [
+                "32px",
+                {
+                  lineHeight: "40px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-lg-mobile": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background text-on-background font-body-md min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+  >
+    <!-- Background Layer with Depth -->
+    <div class="fixed inset-0 z-0">
+      <div
+        class="absolute inset-0 bg-gradient-to-tr from-surface-container-highest via-surface to-background"
+      ></div>
+      <!-- Subtle Pattern Overlay -->
+      <div
+        class="absolute inset-0 opacity-[0.03]"
+        style="
+          background-image: radial-gradient(#000f3f 1px, transparent 1px);
+          background-size: 40px 40px;
+        "
+      ></div>
+      <!-- Abstract Decorative Elements -->
+      <div
+        class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px]"
+      ></div>
+      <div
+        class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[80px]"
+      ></div>
+    </div>
+    <!-- Main Content Canvas -->
+    <main class="relative z-10 w-full max-w-[480px] px-margin-mobile md:px-0">
+      <!-- Branding Anchor -->
+      <div class="mb-xl text-center">
+        <div class="inline-flex items-center gap-sm mb-base">
+          <span
+            class="material-symbols-outlined text-primary text-[32px]"
+            style="font-variation-settings: &quot;FILL&quot; 1"
+            >shield_person</span
+          >
+          <h1
+            class="font-headline-md text-headline-md font-bold text-primary tracking-tight"
+          >
+            ES Payment
+          </h1>
+        </div>
+        <p
+          class="text-on-surface-variant font-body-sm tracking-wide uppercase text-xs opacity-70"
+        >
+          Admin Console • Secure Access
+        </p>
+      </div>
+      <!-- Verification Card -->
+      <div
+        class="glass-panel border border-outline-variant/30 rounded-xl p-lg md:p-xl shadow-sm"
+      >
+        <!-- Header Section -->
+        <div class="mb-lg">
+          <h2
+            class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-sm"
+          >
+            Confirm Identity
+          </h2>
+          <p class="text-on-surface-variant font-body-md">
+            Enter the 6-digit verification code sent to your registered device
+            or email.
+          </p>
+        </div>
+        <!-- OTP Input Cluster -->
+        <form class="space-y-lg" id="otp-form">
+          <div class="flex justify-between gap-xs md:gap-sm" id="otp-inputs">
+            <input
+              autofocus=""
+              class="otp-input w-12 h-16 md:w-14 md:h-20 text-center text-headline-md font-bold bg-surface-container-low border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+              data-index="0"
+              maxlength="1"
+              type="number"
+            />
+            <input
+              class="otp-input w-12 h-16 md:w-14 md:h-20 text-center text-headline-md font-bold bg-surface-container-low border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+              data-index="1"
+              maxlength="1"
+              type="number"
+            />
+            <input
+              class="otp-input w-12 h-16 md:w-14 md:h-20 text-center text-headline-md font-bold bg-surface-container-low border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+              data-index="2"
+              maxlength="1"
+              type="number"
+            />
+            <input
+              class="otp-input w-12 h-16 md:w-14 md:h-20 text-center text-headline-md font-bold bg-surface-container-low border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+              data-index="3"
+              maxlength="1"
+              type="number"
+            />
+            <input
+              class="otp-input w-12 h-16 md:w-14 md:h-20 text-center text-headline-md font-bold bg-surface-container-low border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+              data-index="4"
+              maxlength="1"
+              type="number"
+            />
+            <input
+              class="otp-input w-12 h-16 md:w-14 md:h-20 text-center text-headline-md font-bold bg-surface-container-low border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+              data-index="5"
+              maxlength="1"
+              type="number"
+            />
+          </div>
+          <!-- Timer & Resend Action -->
+          <div
+            class="flex items-center justify-between py-sm border-t border-b border-outline-variant/20"
+          >
+            <div
+              class="flex items-center gap-xs text-on-surface-variant font-label-md"
+            >
+              <span class="material-symbols-outlined text-[18px]"
+                >schedule</span
+              >
+              <span>Code expires in:</span>
+              <span class="text-secondary font-bold tabular-nums" id="countdown"
+                >02:00</span
+              >
+            </div>
+            <button
+              class="text-primary font-label-md hover:underline disabled:opacity-30 disabled:no-underline transition-all"
+              disabled=""
+              id="resend-btn"
+              type="button"
+            >
+              Resend Code
+            </button>
+          </div>
+          <!-- CTA Button -->
+          <button
+            class="w-full h-14 bg-secondary text-white font-label-md tracking-wider uppercase rounded-lg hover:bg-secondary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-sm group"
+            type="submit"
+          >
+            <span>Verify &amp; Continue</span>
+            <span
+              class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform"
+              >arrow_forward_ios</span
+            >
+          </button>
+        </form>
+        <!-- Support/Security Footer -->
+        <div class="mt-xl flex flex-col gap-md">
+          <div
+            class="flex items-start gap-sm bg-surface-container/50 p-md rounded-lg"
+          >
+            <span class="material-symbols-outlined text-primary-fixed-dim mt-xs"
+              >info</span
+            >
+            <p class="text-body-sm text-on-surface-variant leading-relaxed">
+              Security Notice: ES Payment will never ask for your authentication
+              codes over the phone or via email.
+            </p>
+          </div>
+          <div class="flex items-center justify-center gap-gutter opacity-60">
+            <div
+              class="h-8 w-12 bg-contain bg-no-repeat bg-center grayscale"
+              data-alt="A small monochrome grey logo for ISO 27001 certification, indicating high security standards and professional compliance in a corporate fintech environment."
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBsHlVU5PWCbwbvWMQylTyWze4oYTOXICwRX12G0Huz6-fITdMIVhdmUBn8UDwLfNPrMCx5XNPwYYfVbXyyGSBliC59hGHJhWFJbTn5xGC4wlduHFZwxRmQskbCOWBnaALPXSqZd1kHZbNjteIACmFKoEN_2Sta4uaIFSi4rwvRTVqyXQ-VzcxuxRsifizEm9lxW0FYsneLDdWIe1ymLtHFlvn6LvSpTOYcCgvwgGiO-pd5Krs4iQQpPg&quot;);
+              "
+            ></div>
+            <div
+              class="h-8 w-12 bg-contain bg-no-repeat bg-center grayscale"
+              data-alt="A small monochrome grey logo representing SOC2 Type II compliance, emphasizing industrial data protection and trust for an enterprise financial services interface."
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuD4wzijv887Y8vGpJf2x0haOFRTYmM49fmkTXUADV-eIhVT_i8PsR8YPdOYNjroWiFPBlr8RaXIDpAXR_Pi8ceV4hWU3RJHe3oC9s9u6-RPJ54dEBfDzRpRXJhBtqcp4o-oAb95Kj6ePPXBYPXaOZPAWqe9finRv7BD-uHXgHdfwDVdXpGiO0Ea_PBg0MdhQmTsrdVSDTgnBpwTq77W72GzpVojFuJghWFvMqobHqztS-oT7_8Yf8iUUQ&quot;);
+              "
+            ></div>
+            <div
+              class="h-8 w-12 bg-contain bg-no-repeat bg-center grayscale"
+              data-alt="A small monochrome grey padlock icon with a 'Secure' label, symbolizing 256-bit encryption for institutional-grade terminal transactions and data integrity."
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuB3bZXmvICyKyd0wKmj8ce-LDyKLhW_bn8ArnV-Q62Rg6NsVJiG4NSJ6CBcXeM-qgmKfXRVCxZH7uqaiFiGJKGM41jzG3XeIyD5L6Rvbmw6AvT-uEDnQuO7M367_4lIsKs7TV09th8GmpJyJa5ZTm7g7LkPiy5i7l-4KDCKAWIuOtp3sze_e4s4uleNdwzIzzFJl708jVjOWl6C3QVkSwnhxS4t7TzgmQjRWNaxQ8ZvfGnaxOM0ItrjhA&quot;);
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+      <!-- Global Footer Links -->
+      <footer class="mt-xl text-center">
+        <nav
+          class="flex justify-center gap-md text-on-surface-variant font-label-md opacity-50"
+        >
+          <a class="hover:text-primary transition-colors" href="#"
+            >Privacy Policy</a
+          >
+          <span>•</span>
+          <a class="hover:text-primary transition-colors" href="#"
+            >Support Desk</a
+          >
+          <span>•</span>
+          <a class="hover:text-primary transition-colors" href="#"
+            >Compliance</a
+          >
+        </nav>
+      </footer>
+    </main>
+    <!-- Success Modal Overlay (Hidden by Default) -->
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-primary/20 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-500"
+      id="success-overlay"
+    >
+      <div
+        class="bg-white rounded-xl p-xl max-w-[320px] w-full text-center shadow-2xl border border-secondary/20"
+      >
+        <div
+          class="w-16 h-16 bg-secondary-container text-secondary rounded-full flex items-center justify-center mx-auto mb-lg animate-pulse-gold"
+        >
+          <span
+            class="material-symbols-outlined text-[32px]"
+            style="font-variation-settings: &quot;FILL&quot; 1"
+            >verified_user</span
+          >
+        </div>
+        <h3 class="font-headline-md text-on-surface mb-sm">
+          Verification Successful
+        </h3>
+        <p class="text-body-sm text-on-surface-variant mb-lg">
+          Access granted. Redirecting to your terminal dashboard...
+        </p>
+        <div
+          class="w-full bg-surface-container h-1 rounded-full overflow-hidden"
+        >
+          <div
+            class="h-full bg-secondary w-0 animate-[loading_2s_ease-in-out_forwards]"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <style>
+      @keyframes loading {
+        to {
+          width: 100%;
+        }
+      }
+    </style>
+    <script>
+      // OTP Input Logic
+      const inputs = document.querySelectorAll(".otp-input");
+      const form = document.getElementById("otp-form");
+      const successOverlay = document.getElementById("success-overlay");
+
+      inputs.forEach((input, index) => {
+        // Handle number only
+        input.addEventListener("input", (e) => {
+          if (e.target.value.length > 1) {
+            e.target.value = e.target.value.slice(0, 1);
+          }
+          if (e.target.value && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+        });
+
+        // Handle backspace
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace" && !e.target.value && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+
+        // Handle Paste
+        input.addEventListener("paste", (e) => {
+          e.preventDefault();
+          const pasteData = e.clipboardData
+            .getData("text")
+            .slice(0, 6)
+            .split("");
+          pasteData.forEach((char, i) => {
+            if (inputs[i]) inputs[i].value = char;
+          });
+          if (inputs[pasteData.length - 1]) {
+            inputs[pasteData.length - 1].focus();
+          } else {
+            inputs[inputs.length - 1].focus();
+          }
+        });
+      });
+
+      // Timer Logic
+      let timeLeft = 120; // 2 minutes
+      const countdownEl = document.getElementById("countdown");
+      const resendBtn = document.getElementById("resend-btn");
+
+      const timerInterval = setInterval(() => {
+        timeLeft--;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        countdownEl.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          resendBtn.disabled = false;
+          countdownEl.parentElement.classList.add("opacity-40");
+        }
+      }, 1000);
+
+      // Form Submit
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const otpValue = Array.from(inputs)
+          .map((i) => i.value)
+          .join("");
+
+        if (otpValue.length === 6) {
+          // Simulate verification
+          successOverlay.classList.remove("opacity-0", "pointer-events-none");
+          setTimeout(() => {
+            // In a real app, window.location.href = '/dashboard';
+            console.log("Redirecting to dashboard...");
+          }, 2500);
+        } else {
+          // Shake effect on error
+          form.classList.add("animate-shake");
+          setTimeout(() => form.classList.remove("animate-shake"), 500);
+        }
+      });
+
+      // Keyframes for error shake
+      const style = document.createElement("style");
+      style.innerHTML = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+            .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
+        `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,736 @@
+<!doctype html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Transaction Details | ES Payment</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+      }
+      .shimmer {
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 222, 161, 0.2),
+          transparent
+        );
+        background-size: 200% 100%;
+        animation: shimmer 3s infinite;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed-variant": "#374475",
+              "primary-fixed": "#dce1ff",
+              background: "#f8f9ff",
+              "inverse-surface": "#213145",
+              "tertiary-fixed-dim": "#dcc66e",
+              "on-tertiary-fixed": "#221b00",
+              tertiary: "#6e5e0d",
+              "secondary-fixed-dim": "#f0bf56",
+              "error-container": "#ffdad6",
+              "tertiary-fixed": "#f9e287",
+              "on-primary-container": "#808dc2",
+              "tertiary-container": "#bfab56",
+              "outline-variant": "#c6c5d0",
+              "primary-fixed-dim": "#b7c4fd",
+              "surface-dim": "#cbdbf5",
+              "on-secondary-container": "#745400",
+              "surface-container-lowest": "#ffffff",
+              primary: "#000f3f",
+              outline: "#767680",
+              surface: "#f8f9ff",
+              "on-surface": "#0b1c30",
+              "on-tertiary": "#ffffff",
+              "surface-container-low": "#eff4ff",
+              "surface-tint": "#4f5c8e",
+              "primary-container": "#172554",
+              "on-tertiary-fixed-variant": "#534600",
+              "on-background": "#0b1c30",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary-container": "#4b3f00",
+              "inverse-primary": "#b7c4fd",
+              "secondary-fixed": "#ffdea1",
+              "on-surface-variant": "#45464f",
+              "on-error-container": "#93000a",
+              "surface-container": "#e5eeff",
+              "surface-bright": "#f8f9ff",
+              "on-secondary": "#ffffff",
+              "secondary-container": "#fdca60",
+              "on-error": "#ffffff",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed-variant": "#5c4200",
+              "on-primary-fixed": "#071747",
+              error: "#ba1a1a",
+              "on-secondary-fixed": "#261900",
+              "surface-container-high": "#dce9ff",
+              secondary: "#7a5900",
+              "inverse-on-surface": "#eaf1ff",
+              "on-primary": "#ffffff",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              "margin-desktop": "48px",
+              xl: "32px",
+              lg: "24px",
+              xs: "4px",
+              gutter: "24px",
+              "max-width": "1440px",
+              md: "16px",
+              sm: "8px",
+              "margin-mobile": "16px",
+              base: "4px",
+            },
+            fontFamily: {
+              "headline-lg": ["Inter"],
+              "body-md": ["Inter"],
+              "label-md": ["Inter"],
+              "headline-md": ["Inter"],
+              "body-lg": ["Inter"],
+              "display-lg": ["Inter"],
+              "body-sm": ["Inter"],
+            },
+            fontSize: {
+              "headline-lg": [
+                "32px",
+                {
+                  lineHeight: "40px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "label-md": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "600" },
+              ],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+              "display-lg": [
+                "48px",
+                {
+                  lineHeight: "56px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background text-on-background font-body-md overflow-x-hidden">
+    <!-- Sidebar Navigation -->
+    <aside
+      class="h-screen w-64 fixed left-0 top-0 bg-primary dark:bg-primary-container border-r border-outline-variant dark:border-outline flex flex-col py-lg px-md z-50"
+    >
+      <div class="mb-xl px-md">
+        <h1
+          class="font-headline-md text-headline-md font-bold text-secondary-fixed"
+        >
+          ES Payment
+        </h1>
+        <p class="text-on-primary-fixed-variant text-label-md font-label-md">
+          Admin Console
+        </p>
+      </div>
+      <nav class="flex-1 space-y-sm">
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container transition-colors duration-200 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="dashboard"
+            >dashboard</span
+          >
+          <span class="font-body-md text-body-md">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-md bg-secondary dark:bg-secondary-fixed text-on-secondary dark:text-on-secondary-fixed rounded-lg px-md py-sm scale-95 active:scale-90 transition-transform"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="receipt_long"
+            >receipt_long</span
+          >
+          <span class="font-body-md text-body-md">Transactions</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container transition-colors duration-200 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="payments"
+            >payments</span
+          >
+          <span class="font-body-md text-body-md">Bill Payments</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container transition-colors duration-200 rounded-lg"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined"
+            data-icon="admin_panel_settings"
+            >admin_panel_settings</span
+          >
+          <span class="font-body-md text-body-md">Admin Console</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container transition-colors duration-200 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+          <span class="font-body-md text-body-md">Compliance</span>
+        </a>
+        <a
+          class="flex items-center gap-md text-primary-fixed dark:text-primary-fixed-dim px-md py-sm hover:bg-primary-container transition-colors duration-200 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="help_center"
+            >help_center</span
+          >
+          <span class="font-body-md text-body-md">Support</span>
+        </a>
+      </nav>
+      <div class="mt-auto px-md">
+        <button
+          class="w-full bg-secondary text-on-secondary font-label-md py-md rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-sm"
+        >
+          <span class="material-symbols-outlined" data-icon="add">add</span>
+          New Transaction
+        </button>
+      </div>
+    </aside>
+    <!-- Main Content Shell -->
+    <main class="ml-64 min-h-screen relative">
+      <!-- Top App Bar -->
+      <header
+        class="flex justify-between items-center h-16 px-gutter sticky top-0 bg-surface-container-lowest dark:bg-surface-dim border-b border-outline-variant dark:border-outline z-40"
+      >
+        <div class="flex items-center gap-lg">
+          <button
+            class="text-primary hover:bg-surface-container-low p-sm rounded-full transition-colors"
+          >
+            <span class="material-symbols-outlined" data-icon="arrow_back"
+              >arrow_back</span
+            >
+          </button>
+          <h2
+            class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed"
+          >
+            Bill Details
+          </h2>
+        </div>
+        <div class="flex items-center gap-md">
+          <div class="flex items-center gap-sm">
+            <button
+              class="p-sm text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors"
+            >
+              <span class="material-symbols-outlined" data-icon="notifications"
+                >notifications</span
+              >
+            </button>
+            <button
+              class="p-sm text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors"
+            >
+              <span class="material-symbols-outlined" data-icon="help"
+                >help</span
+              >
+            </button>
+            <button
+              class="p-sm text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors"
+            >
+              <span class="material-symbols-outlined" data-icon="settings"
+                >settings</span
+              >
+            </button>
+          </div>
+          <div class="h-8 w-px bg-outline-variant mx-sm"></div>
+          <img
+            class="w-10 h-10 rounded-full border border-outline object-cover"
+            data-alt="A professional headshot of a corporate executive in a dark navy suit against a clean, soft-lit professional studio background. The aesthetic is high-end and institutional, matching the premium minimalism of the ES Payment platform."
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2cuc32Ldg5OTej9OAtk5Z7e6rTEAddrjI9Ic-UpFRe_7o-cBpIwk2bHl92KeUSB6P7_T_-JYApewpm5G39guD38G2e025NatZ2W60AroUNEQyCu9eUsozWYECm7K09veqyc18Gf0VmVB8XrmUuh9_jpr9tMyIRA9rMupbWpp4f7-6gh7ewY6H8EWIHDJSH_We6R8EbU69WxZG7X1t4qlapwxWwkA3d4v_HHdKaRg1DiAoLnCiogG89A"
+          />
+        </div>
+      </header>
+      <!-- Details Canvas -->
+      <div class="p-xl max-w-5xl mx-auto">
+        <!-- Breadcrumbs -->
+        <nav
+          class="flex items-center gap-sm text-label-md font-label-md text-on-surface-variant mb-lg"
+        >
+          <span class="hover:text-primary cursor-pointer">Transactions</span>
+          <span class="material-symbols-outlined text-[14px]"
+            >chevron_right</span
+          >
+          <span class="hover:text-primary cursor-pointer">Bill Payments</span>
+          <span class="material-symbols-outlined text-[14px]"
+            >chevron_right</span
+          >
+          <span class="text-primary font-bold">IKEDC-99382201</span>
+        </nav>
+        <div class="grid grid-cols-12 gap-lg">
+          <!-- Main Details Card -->
+          <div class="col-span-8 space-y-lg">
+            <div
+              class="bg-surface-container-lowest border border-outline-variant rounded-xl p-xl relative overflow-hidden"
+            >
+              <!-- Top Header Section -->
+              <div class="flex justify-between items-start mb-xl">
+                <div class="flex gap-lg items-center">
+                  <div
+                    class="w-20 h-20 bg-surface-container rounded-lg border border-outline-variant flex items-center justify-center overflow-hidden"
+                  >
+                    <img
+                      class="w-16 h-16 object-contain"
+                      data-alt="A crisp, high-resolution vector logo of Ikeja Electric (IKEDC) featuring its distinct red and orange lightning bolt branding against a clean white background. The image is framed perfectly for an institutional bill payment hub interface."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL6HSiXTdx1R6vZGl2OdoO-PqkiWnSRAxqp9fc9ElZHbRfcLfV3MBsZGHMC_KzsOdk8nxcKRNBq1dgIdyuWw0IS3Gn6J-xaqJk9kGVk49QRX8js4ZmQAPh5bjbOSm-95r6FIRDKCZEXHiSJ0ZGOEIoTncicOlI4xWTm3fojLrVjZS6glqKIECDVa6tMyV58WuWZYpWzniHqviRlrqLh7MgOiXe-YspEX2khxyCJU6RRAH5Ykx1P1HzYg"
+                    />
+                  </div>
+                  <div>
+                    <h3 class="font-headline-lg text-headline-lg text-primary">
+                      Ikeja Electric (IKEDC)
+                    </h3>
+                    <p class="text-body-md text-on-surface-variant">
+                      Post-paid Electricity Bill Payment
+                    </p>
+                    <div
+                      class="mt-sm inline-flex items-center gap-xs px-sm py-[2px] bg-secondary-fixed text-on-secondary-fixed rounded-full text-label-md font-label-md"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"
+                      ></span>
+                      SUCCESSFUL
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p
+                    class="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest"
+                  >
+                    Amount Paid
+                  </p>
+                  <h4
+                    class="font-display-lg text-display-lg text-primary leading-tight"
+                  >
+                    ₦45,500.00
+                  </h4>
+                  <p class="text-body-sm text-on-surface-variant">
+                    Fee: ₦100.00 | Total: ₦45,600.00
+                  </p>
+                </div>
+              </div>
+              <!-- Data Grid -->
+              <div
+                class="grid grid-cols-2 gap-y-lg gap-x-xl pt-lg border-t border-outline-variant"
+              >
+                <div>
+                  <label
+                    class="text-label-md font-label-md text-outline uppercase"
+                    >Recipient Account</label
+                  >
+                  <p
+                    class="font-body-lg text-body-lg text-on-surface font-semibold"
+                  >
+                    5422 1093 884
+                  </p>
+                  <p class="text-body-sm text-on-surface-variant">
+                    Account Name: ADEREMI JOHNSON
+                  </p>
+                </div>
+                <div>
+                  <label
+                    class="text-label-md font-label-md text-outline uppercase"
+                    >Payment Reference</label
+                  >
+                  <p
+                    class="font-body-lg text-body-lg text-on-surface font-semibold flex items-center gap-xs"
+                  >
+                    FT-IKEDC-20231109-772
+                    <span
+                      class="material-symbols-outlined text-[18px] text-outline hover:text-primary cursor-pointer"
+                      data-icon="content_copy"
+                      >content_copy</span
+                    >
+                  </p>
+                </div>
+                <div>
+                  <label
+                    class="text-label-md font-label-md text-outline uppercase"
+                    >Transaction Date</label
+                  >
+                  <p
+                    class="font-body-lg text-body-lg text-on-surface font-semibold"
+                  >
+                    November 09, 2023 — 14:32 WAT
+                  </p>
+                </div>
+                <div>
+                  <label
+                    class="text-label-md font-label-md text-outline uppercase"
+                    >Service Address</label
+                  >
+                  <p
+                    class="font-body-lg text-body-lg text-on-surface font-semibold"
+                  >
+                    12, Oba Akran Ave, Ikeja, Lagos State
+                  </p>
+                </div>
+                <div>
+                  <label
+                    class="text-label-md font-label-md text-outline uppercase"
+                    >Token Generated</label
+                  >
+                  <div
+                    class="mt-xs p-md bg-surface-container rounded-lg border border-secondary/20 flex justify-between items-center group cursor-pointer hover:border-secondary transition-colors"
+                  >
+                    <span
+                      class="font-mono text-headline-md tracking-[0.2em] text-primary"
+                      >4410 8823 1190 2341 0092</span
+                    >
+                    <button
+                      class="bg-secondary text-on-secondary px-md py-xs rounded-lg text-label-md font-label-md group-hover:scale-105 transition-transform"
+                    >
+                      COPY
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Transaction Flow / History Mini-Section -->
+            <div class="bg-white border border-outline-variant rounded-xl p-lg">
+              <h5
+                class="font-label-md text-label-md text-outline uppercase mb-md"
+              >
+                Payment Lifecycle
+              </h5>
+              <div class="flex items-center gap-md">
+                <div class="flex flex-col items-center">
+                  <div
+                    class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[18px]"
+                      data-icon="check"
+                      >check</span
+                    >
+                  </div>
+                  <div class="w-0.5 h-8 bg-secondary/30"></div>
+                </div>
+                <div class="pb-8">
+                  <p
+                    class="font-body-md text-body-md font-semibold text-primary"
+                  >
+                    Initiated
+                  </p>
+                  <p class="text-body-sm text-on-surface-variant">
+                    Nov 09, 14:30:12
+                  </p>
+                </div>
+                <div class="w-12 h-px bg-outline-variant mx-sm mb-8"></div>
+                <div class="flex flex-col items-center">
+                  <div
+                    class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[18px]"
+                      data-icon="account_balance"
+                      >account_balance</span
+                    >
+                  </div>
+                  <div class="w-0.5 h-8 bg-secondary/30"></div>
+                </div>
+                <div class="pb-8">
+                  <p
+                    class="font-body-md text-body-md font-semibold text-primary"
+                  >
+                    Bank Authorized
+                  </p>
+                  <p class="text-body-sm text-on-surface-variant">
+                    Nov 09, 14:31:05
+                  </p>
+                </div>
+                <div class="w-12 h-px bg-outline-variant mx-sm mb-8"></div>
+                <div class="flex flex-col items-center">
+                  <div
+                    class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[18px]"
+                      data-icon="check_circle"
+                      >check_circle</span
+                    >
+                  </div>
+                  <div class="w-0.5 h-8 bg-transparent"></div>
+                </div>
+                <div class="pb-8">
+                  <p
+                    class="font-body-md text-body-md font-semibold text-primary"
+                  >
+                    Biller Settled
+                  </p>
+                  <p class="text-body-sm text-on-surface-variant">
+                    Nov 09, 14:32:44
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar Actions -->
+          <div class="col-span-4 space-y-lg">
+            <!-- Quick Actions -->
+            <div
+              class="bg-primary text-on-primary rounded-xl p-lg shadow-xl shadow-primary/10"
+            >
+              <h5
+                class="font-headline-md text-headline-md text-secondary-fixed mb-md"
+              >
+                Manage Bill
+              </h5>
+              <div class="space-y-sm">
+                <button
+                  class="w-full flex items-center justify-between p-md bg-white/10 hover:bg-white/20 rounded-lg transition-colors border border-white/5"
+                >
+                  <div class="flex items-center gap-md">
+                    <span class="material-symbols-outlined" data-icon="download"
+                      >download</span
+                    >
+                    <span class="font-body-md text-body-md"
+                      >Download Receipt</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined text-[18px]"
+                    >open_in_new</span
+                  >
+                </button>
+                <button
+                  class="w-full flex items-center justify-between p-md bg-white/10 hover:bg-white/20 rounded-lg transition-colors border border-white/5"
+                >
+                  <div class="flex items-center gap-md">
+                    <span class="material-symbols-outlined" data-icon="mail"
+                      >mail</span
+                    >
+                    <span class="font-body-md text-body-md"
+                      >Email Confirmation</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined text-[18px]"
+                    >chevron_right</span
+                  >
+                </button>
+                <button
+                  class="w-full flex items-center justify-between p-md bg-white/10 hover:bg-white/20 rounded-lg transition-colors border border-white/5"
+                >
+                  <div class="flex items-center gap-md">
+                    <span class="material-symbols-outlined" data-icon="repeat"
+                      >repeat</span
+                    >
+                    <span class="font-body-md text-body-md"
+                      >Repeat Payment</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined text-[18px]"
+                    >chevron_right</span
+                  >
+                </button>
+                <button
+                  class="w-full flex items-center justify-between p-md bg-white/10 hover:bg-white/20 rounded-lg transition-colors border border-white/5"
+                >
+                  <div class="flex items-center gap-md">
+                    <span class="material-symbols-outlined" data-icon="star"
+                      >star</span
+                    >
+                    <span class="font-body-md text-body-md"
+                      >Add to Favorites</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined text-[18px]"
+                    >chevron_right</span
+                  >
+                </button>
+              </div>
+            </div>
+            <!-- Related Activity / Context -->
+            <div
+              class="bg-surface-container-low border border-outline-variant rounded-xl p-lg"
+            >
+              <h5
+                class="font-label-md text-label-md text-outline uppercase mb-md"
+              >
+                Account Balance
+              </h5>
+              <div class="flex items-end justify-between mb-lg">
+                <div>
+                  <p class="text-headline-md font-headline-md text-primary">
+                    ₦2,140,550.00
+                  </p>
+                  <p class="text-body-sm text-on-surface-variant">
+                    Institutional Operating Account
+                  </p>
+                </div>
+                <div class="text-right">
+                  <span class="text-secondary font-bold text-label-md"
+                    >+4.2%</span
+                  >
+                </div>
+              </div>
+              <div
+                class="p-md bg-white rounded-lg border border-outline-variant"
+              >
+                <p class="text-body-sm text-on-surface-variant mb-xs">
+                  Next recurring payment
+                </p>
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-primary">MTN Airtime</span>
+                  <span class="text-body-sm">Dec 01, 2023</span>
+                </div>
+              </div>
+            </div>
+            <!-- Support Card -->
+            <div
+              class="bg-secondary-container text-on-secondary-container rounded-xl p-lg relative overflow-hidden group cursor-pointer"
+            >
+              <div
+                class="absolute top-0 right-0 p-lg opacity-10 group-hover:scale-110 transition-transform"
+              >
+                <span
+                  class="material-symbols-outlined text-[80px]"
+                  data-icon="support_agent"
+                  >support_agent</span
+                >
+              </div>
+              <h5 class="font-headline-md text-headline-md mb-xs">
+                Need help?
+              </h5>
+              <p class="text-body-md mb-md opacity-80">
+                Encountered an issue with this IKEDC payment? Our desk is
+                available 24/7.
+              </p>
+              <button
+                class="bg-on-secondary-container text-white px-lg py-sm rounded-lg font-label-md hover:shadow-lg transition-all"
+              >
+                Report Issue
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Detailed Grid Row for Map/Visual Context -->
+        <div class="mt-lg grid grid-cols-12 gap-lg">
+          <div
+            class="col-span-12 bg-white border border-outline-variant rounded-xl overflow-hidden h-64 relative group"
+          >
+            <div
+              class="absolute inset-0 bg-gray-200"
+              data-location="Lagos, Nigeria"
+            >
+              <img
+                class="w-full h-full object-cover grayscale opacity-50"
+                data-alt="A stylized, architectural map view of Ikeja, Lagos, Nigeria, showing the main Oba Akran axis in a professional data-visualisation style. The map uses a sophisticated navy and gold color scheme to represent streets and power grids, fitting the institutional ES Payment branding."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgSL7Pr2xgzRLOfaZGgkAUGlVyXF4VXu-kPfEKWDns4inPM7nBS5BqX_2k3JIrAYqGNZN8tEgsp--F8YdFJlz8hussIARFvFjTV6gnMedqWNMFdlqh-ohP3qC6W2AhLe8tRXJJvUinZhcFZbA2gUqiHFSZ27-Z4i26e6roN-MIRjCMGxKf49MbTO24jxkJw_kXY-5gK80L94o9puR8x8sZNI_q9qUDYUH0vomIzmXmLGZkxvYcM1Pz-A"
+              />
+            </div>
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"
+            ></div>
+            <div class="absolute bottom-0 left-0 p-lg text-white">
+              <h6 class="font-headline-md text-headline-md">
+                Service Region: Ikeja North
+              </h6>
+              <p class="text-body-md opacity-80">
+                Grid reliability: 94.2% • High Demand Period
+              </p>
+            </div>
+            <div class="absolute top-lg right-lg">
+              <div
+                class="bg-white/90 backdrop-blur px-md py-sm rounded-full flex items-center gap-sm shadow-xl"
+              >
+                <span
+                  class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
+                ></span>
+                <span class="text-label-md font-label-md text-primary"
+                  >Network Online</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      // Simple micro-interaction for copy buttons
+      document.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("mousedown", () => {
+          button.classList.add("scale-95");
+        });
+        button.addEventListener("mouseup", () => {
+          button.classList.remove("scale-95");
+        });
+      });
+
+      // Copy logic simulation
+      const tokenDisplay = document.querySelector(".tracking-\\[0\\.2em\\]");
+      if (tokenDisplay) {
+        tokenDisplay.parentElement.addEventListener("click", () => {
+          const text = tokenDisplay.innerText;
+          navigator.clipboard.writeText(text).then(() => {
+            const btn = tokenDisplay.parentElement.querySelector("button");
+            const originalText = btn.innerText;
+            btn.innerText = "COPIED!";
+            btn.classList.replace("bg-secondary", "bg-green-600");
+            setTimeout(() => {
+              btn.innerText = originalText;
+              btn.classList.replace("bg-green-600", "bg-secondary");
+            }, 2000);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
