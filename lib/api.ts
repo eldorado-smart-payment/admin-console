@@ -197,6 +197,44 @@ export async function fetchHealthStatus() {
   return res.json() as Promise<HealthStatus>;
 }
 
+const MISC_BASE = `${process.env.NEXT_PUBLIC_API_BASE}/misc`;
+
+export async function sendBatchEmail(subject: string, message: string) {
+  const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  const res = await fetch(`${MISC_BASE}/send-maintenance-email`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ subject, message }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = {}; }
+    throw new Error(data.message || data.error || "Failed to send maintenance email");
+  }
+  return res.json();
+}
+
+export async function sendBatchNotification(title: string, message: string) {
+  const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  const res = await fetch(`${MISC_BASE}/send-batch-notification`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ title, message }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = {}; }
+    throw new Error(data.message || data.error || "Failed to send batch notification");
+  }
+  return res.json();
+}
+
 export async function fetchAllWebhookPayments() {
   const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
 
@@ -208,6 +246,114 @@ export async function fetchAllWebhookPayments() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/staff/all-webhook-payments/`, { headers });
   if (!res.ok) {
     throw new Error("Failed to fetch webhook payments");
+  }
+  return res.json();
+}
+
+export type UserListItem = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  status: string;
+  tier: string;
+  kyc_status: string;
+  balance: number;
+  created_at: string;
+};
+
+export type UsersListResponse = {
+  message: string;
+  data: {
+    count: number;
+    currentPage: number;
+    totalPages: number;
+    nextPage: number | null;
+    previousPage: number | null;
+    data: UserListItem[];
+    summary: {
+      total_users: number;
+      online_users: number;
+      active_users: number;
+      suspended_users: number;
+      new_today: number;
+    };
+  };
+};
+
+export type LedgerEntry = {
+  transaction_id: string;
+  balance_before: number;
+  balance_after: number;
+  type: "credit" | "debit";
+  transaction_type: "transfer" | "bill" | "reversed" | "funding";
+  created_at: string;
+  user: {
+    name: string;
+    email: string;
+  };
+};
+
+export type UserDetail = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  status: string;
+  tier: string;
+  kyc_status: string;
+  date_of_birth: string;
+  gender: string;
+  nationality: string;
+  address: string;
+  bvn: string;
+  account_number: string;
+  bank_name: string;
+  bank_code: string;
+  current_balance: number;
+  available_balance: number;
+  total_transactions: number;
+  total_deposits: number;
+  total_withdrawals: number;
+  created_at: string;
+  last_login: string;
+  ledger: LedgerEntry[];
+};
+
+export type UserDetailResponse = {
+  message: string;
+  data: UserDetail;
+};
+
+export async function fetchUsers(params?: { page?: number; search?: string; status?: string; date_from?: string; date_to?: string }) {
+  const searchParams = new URLSearchParams();
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== "") searchParams.append(key, String(value));
+    });
+  }
+  const query = searchParams.toString();
+  return apiClient(`/users/all-users/${query ? `?${query}` : ""}`, { method: "GET" }) as Promise<UsersListResponse>;
+}
+
+export async function fetchUserDetail(id: string | number) {
+  return apiClient(`/users/user-detail/${id}/`, { method: "GET" }) as Promise<UserDetailResponse>;
+}
+
+export async function sendMailToUser(email: string, subject: string, message: string) {
+  const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  const res = await fetch(`${MISC_BASE}/send-mail-to-user`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ email, subject, message }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = {}; }
+    throw new Error(data.message || data.error || "Failed to send email");
   }
   return res.json();
 }

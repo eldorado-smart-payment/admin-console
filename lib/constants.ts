@@ -3,6 +3,8 @@ export const NAV_ITEMS = [
   { label: "Transactions", icon: "receipt_long", href: "/transactions" },
   { label: "Bill Payments", icon: "payments", href: "/bill-payments" },
   { label: "Admin Console", icon: "admin_panel_settings", href: "/admin" },
+  { label: "Users", icon: "group", href: "/users" },
+  { label: "Notifications", icon: "notifications", href: "/notifications" },
   { label: "Compliance", icon: "gavel", href: "/kyc" },
   { label: "Support", icon: "help_center", href: "#" },
 ] as const;
