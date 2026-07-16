@@ -29,10 +29,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         } lg:translate-x-0`}
       >
         <div className="p-6">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-secondary-container rounded-sm flex items-center justify-center text-on-secondary-container">
-              <Icon name="analytics" filled />
-            </div>
+          <div className="flex items-center gap-3">
+            <img
+              src="https://eldorado-s3.s3.eu-north-1.amazonaws.com/LOGO-png.png"
+              alt="Logo"
+              className="h-8 w-auto"
+            />
             <div>
               <h1 className="text-headline-md font-bold text-white">ES Payment</h1>
               <p className="text-[10px] uppercase tracking-widest text-white/60 font-bold">

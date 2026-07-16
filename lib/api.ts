@@ -334,6 +334,7 @@ export type UserDetailResponse = {
 
 export async function fetchUsers(params?: { page?: number; search?: string; status?: string; date_from?: string; date_to?: string }) {
   const searchParams = new URLSearchParams();
+  searchParams.append("page_size", "50");
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== "") searchParams.append(key, String(value));

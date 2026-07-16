@@ -5,6 +5,11 @@ import { AuthProvider } from "@/components/AuthContext";
 export const metadata: Metadata = {
   title: "ES Payment Terminal -  Admin Console",
   description: "Admin Console for managing transactions, KYC, and compliance.",
+  icons: {
+    icon: "https://eldorado-s3.s3.eu-north-1.amazonaws.com/LOGO-png.png",
+    shortcut: "https://eldorado-s3.s3.eu-north-1.amazonaws.com/LOGO-png.png",
+    apple: "https://eldorado-s3.s3.eu-north-1.amazonaws.com/LOGO-png.png",
+  },
 };
 
 export default function RootLayout({

@@ -19,8 +19,12 @@ export function AuthShell({ title, subtitle, children, footer }: AuthShellProps)
 
       <main className="relative z-10 w-full max-w-[480px] px-4 md:px-0">
         <div className="mb-6 text-center">
-          <div className="inline-flex items-center gap-2 mb-1">
-            <span className="material-symbols-outlined text-primary text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>shield_person</span>
+          <div className="flex flex-col items-center gap-1 mb-1">
+            <img
+              src="https://eldorado-s3.s3.eu-north-1.amazonaws.com/LOGO-png.png"
+              alt="Logo"
+              className="h-10 w-auto"
+            />
             <h1 className="text-headline-md font-bold text-primary tracking-tight">ES Payment</h1>
           </div>
           <p className="text-on-surface-variant text-body-sm tracking-wide uppercase text-xs opacity-70">
