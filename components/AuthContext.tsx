@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { loginAPI, verifyOTPAPI, resendOTPAPI, logoutAPI } from "@/lib/api";
 
@@ -32,6 +32,8 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+
 function setCookie(name: string, value: string, days = 7) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
   document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
@@ -41,14 +43,53 @@ function removeCookie(name: string) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
 }
 
+function clearSession() {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("expires_at");
+  localStorage.removeItem("pending_email");
+  removeCookie("auth_token");
+  removeCookie("pending_email");
+}
+
+function sendBeaconLogout(refreshToken: string | null) {
+  if (!refreshToken) return;
+  const base = process.env.NEXT_PUBLIC_API_BASE;
+  if (!base) return;
+  try {
+    const blob = new Blob([JSON.stringify({ refresh_token: refreshToken })], { type: "application/json" });
+    navigator.sendBeacon(`${base}/auth/users/logout/`, blob);
+  } catch {
+    // Best-effort; local session is already cleared
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const lastActivityRef = useRef(Date.now());
+  const logoutRef = useRef<() => void>(undefined);
 
-  const SESSION_TIMEOUT_MS = 60 * 60 * 1000;
+  const logout = useCallback(async () => {
+    const refresh_token = localStorage.getItem("refresh_token");
+    try {
+      if (refresh_token) {
+        await logoutAPI(refresh_token);
+      }
+    } catch {
+      // Proceed with client-side cleanup even if API call fails
+    }
+    clearSession();
+    setUser(null);
+    setPendingEmail(null);
+    router.push("/");
+  }, [router]);
+
+  logoutRef.current = logout;
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -73,25 +114,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
+  // Inactivity timeout + visibility change
   useEffect(() => {
     if (!user) return;
 
     let timeout: ReturnType<typeof setTimeout>;
 
+    function logoutSession() {
+      logoutRef.current?.();
+    }
+
     function resetTimer() {
+      lastActivityRef.current = Date.now();
       clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        logout();
-      }, SESSION_TIMEOUT_MS);
+      timeout = setTimeout(logoutSession, SESSION_TIMEOUT_MS);
+    }
+
+    function handleVisibility() {
+      if (document.visibilityState === "visible") {
+        const elapsed = Date.now() - lastActivityRef.current;
+        if (elapsed >= SESSION_TIMEOUT_MS) {
+          logoutSession();
+        } else {
+          clearTimeout(timeout);
+          timeout = setTimeout(logoutSession, SESSION_TIMEOUT_MS - elapsed);
+        }
+      }
+    }
+
+    function handleBeforeUnload() {
+      const refresh_token = localStorage.getItem("refresh_token");
+      sendBeaconLogout(refresh_token);
+      clearSession();
     }
 
     const events = ["mousedown", "keydown", "scroll", "touchstart"];
     events.forEach((e) => window.addEventListener(e, resetTimer));
+    window.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("beforeunload", handleBeforeUnload);
     resetTimer();
 
     return () => {
       clearTimeout(timeout);
       events.forEach((e) => window.removeEventListener(e, resetTimer));
+      window.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [user]);
 
@@ -156,27 +223,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setError(err instanceof Error ? err.message : "Failed to resend OTP");
     }
   }, []);
-
-  const logout = useCallback(async () => {
-    const refresh_token = localStorage.getItem("refresh_token");
-    try {
-      if (refresh_token) {
-        await logoutAPI(refresh_token);
-      }
-    } catch {
-      // Proceed with client-side cleanup even if API call fails
-    }
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("expires_at");
-    localStorage.removeItem("pending_email");
-    removeCookie("auth_token");
-    removeCookie("pending_email");
-    setUser(null);
-    setPendingEmail(null);
-    router.push("/");
-  }, [router]);
 
   const clearError = useCallback(() => setError(null), []);
 

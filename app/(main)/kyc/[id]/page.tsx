@@ -9,6 +9,7 @@ import {
   submitToNinepsbTier3,
   sendKycEmail,
   fetchProofOfAddress,
+  updateMetaAddressStatus,
 } from "@/lib/api";
 import { Icon } from "@/components/ui/Icon";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -384,6 +385,8 @@ export default function KycSubmissionDetailPage() {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [proofOfAddressUrl, setProofOfAddressUrl] = useState<string | null>(null);
   const [loadingProof, setLoadingProof] = useState(false);
+  const [metaStatusValue, setMetaStatusValue] = useState("");
+  const [updatingMetaStatus, setUpdatingMetaStatus] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -1083,7 +1086,49 @@ export default function KycSubmissionDetailPage() {
               <Icon name="settings" className="text-secondary" />
               Review Actions
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3">
+              <div>
+                <label className="text-[11px] uppercase tracking-widest text-on-surface-variant block mb-1.5">
+                  Meta Address Status
+                </label>
+                <div className="flex gap-2">
+                  <select
+                    className="flex-1 px-3 py-2 text-body-sm border border-outline-variant rounded-lg bg-surface-container-lowest focus:outline-none focus:border-secondary transition-colors"
+                    value={metaStatusValue}
+                    onChange={(e) => setMetaStatusValue(e.target.value)}
+                  >
+                    <option value="">Select status...</option>
+                    <option value="unverified">Unverified</option>
+                    <option value="verified">Verified</option>
+                    <option value="awaiting">Awaiting</option>
+                    <option value="submitted">Submitted</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="processed">Processed</option>
+                  </select>
+                  <button
+                    className="px-3 py-2 bg-secondary text-on-secondary rounded-lg font-label-md hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                    disabled={!metaStatusValue || updatingMetaStatus || !id}
+                    onClick={async () => {
+                      if (!id || !metaStatusValue) return;
+                      setUpdatingMetaStatus(true);
+                      try {
+                        await updateMetaAddressStatus(id, metaStatusValue);
+                        setDetail((prev) =>
+                          prev ? { ...prev, meta_address_status: metaStatusValue } : prev
+                        );
+                        setMetaStatusValue("");
+                      } catch {
+                        // Error handled silently; could surface later
+                      } finally {
+                        setUpdatingMetaStatus(false);
+                      }
+                    }}
+                  >
+                    {updatingMetaStatus ? "..." : "Update"}
+                  </button>
+                </div>
+              </div>
               <button
                 className="flex w-full items-center justify-between rounded-lg border border-outline-variant bg-surface-container px-3 py-2 text-sm font-semibold text-primary hover:bg-surface-container-high transition-colors"
                 onClick={() => setShowEmailModal(true)}

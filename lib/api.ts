@@ -123,6 +123,13 @@ export async function fetchProofOfAddress(id: string | number) {
   return apiClient(`/user-kyc-management/${id}/proof-of-address/`, { method: "GET" });
 }
 
+export async function updateMetaAddressStatus(id: string | number, meta_address_status: string) {
+  return apiClient(`/user-kyc-management/${id}/update-meta-address-status/`, {
+    method: "PATCH",
+    body: { meta_address_status },
+  });
+}
+
 export type TransactionEntry = {
   transaction_id: string;
   amount: number;
