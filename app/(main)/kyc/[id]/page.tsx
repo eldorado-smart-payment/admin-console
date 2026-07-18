@@ -416,10 +416,13 @@ export default function KycSubmissionDetailPage() {
   const smileId = detail?.smile_id_response?.FullData;
   const smileNin = detail?.smile_nin_response?.FullData;
 
+  const READY_STATUSES = ["submitted", "verified", "approved", "awaiting", "rejected"];
   const isUpgradeToTier2 =
-    detail?.meta_bill_status?.toLowerCase() === "submitted";
+    detail?.meta_bill_status &&
+    READY_STATUSES.includes(detail.meta_bill_status.toLowerCase());
   const isUpgradeToTier3 =
-    detail?.meta_address_status?.toLowerCase() === "submitted";
+    detail?.meta_address_status &&
+    READY_STATUSES.includes(detail.meta_address_status.toLowerCase());
   const canUpgradeToTier2 =
     isUpgradeToTier2 && detail?.tier_1_verified && !detail?.tier_2_verified;
   const canUpgradeToTier3 =
