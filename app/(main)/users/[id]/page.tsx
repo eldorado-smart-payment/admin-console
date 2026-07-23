@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchUserDetail, sendMailToUser, type UserDetail as UserDetailType } from "@/lib/api";
+import { fetchUserDetail, sendMailToUser, updateUserRestriction, type UserDetail as UserDetailType } from "@/lib/api";
 import { Icon } from "@/components/ui/Icon";
 
 const statusStyles: Record<string, string> = {
@@ -67,6 +67,13 @@ export default function UserDetailPage() {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailResult, setEmailResult] = useState<{ ok: boolean; msg: string } | null>(null);
 
+  const [showRestrictionModal, setShowRestrictionModal] = useState(false);
+  const [restrict, setRestrict] = useState(true);
+  const [reasonsForRestriction, setReasonsForRestriction] = useState("");
+  const [incorrectAttempts, setIncorrectAttempts] = useState(0);
+  const [submittingRestriction, setSubmittingRestriction] = useState(false);
+  const [restrictionResult, setRestrictionResult] = useState<{ ok: boolean; msg: string } | null>(null);
+
   const userId = params?.id as string;
 
   useEffect(() => {
@@ -84,6 +91,35 @@ export default function UserDetailPage() {
     setEmailMessage("");
     setEmailResult(null);
     setShowEmailModal(true);
+  }
+
+  function openRestrictionModal() {
+    setRestrict(true);
+    setReasonsForRestriction("");
+    setIncorrectAttempts(0);
+    setRestrictionResult(null);
+    setShowRestrictionModal(true);
+  }
+
+  async function handleRestrictionSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!user) return;
+    setRestrictionResult(null);
+    setSubmittingRestriction(true);
+    try {
+      const body: { restriction: boolean; reasons_for_restriction?: string; incorrect_attempts?: number } = { restriction: restrict };
+      if (restrict) {
+        body.reasons_for_restriction = reasonsForRestriction;
+        body.incorrect_attempts = incorrectAttempts;
+      }
+      await updateUserRestriction(user.id, body);
+      setRestrictionResult({ ok: true, msg: restrict ? "User restricted successfully." : "Restriction removed successfully." });
+      setTimeout(() => setShowRestrictionModal(false), 1500);
+    } catch (err: unknown) {
+      setRestrictionResult({ ok: false, msg: err instanceof Error ? err.message : "Failed to update restriction" });
+    } finally {
+      setSubmittingRestriction(false);
+    }
   }
 
   async function handleSendEmail(e: React.FormEvent) {
@@ -259,9 +295,12 @@ export default function UserDetailPage() {
 
           <SectionCard title="Quick Actions" icon="bolt">
             <div className="space-y-2">
-              <button className="w-full py-2.5 px-4 bg-primary text-on-primary rounded-lg font-label-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all">
-                <Icon name="lock" className="text-[16px]" />
-                Suspend User
+              <button
+                onClick={openRestrictionModal}
+                className="w-full py-2.5 px-4 bg-primary text-on-primary rounded-lg font-label-md flex items-center justify-center gap-2 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+              >
+                <Icon name="block" className="text-[16px]" />
+                Restrict User
               </button>
               <button
                 onClick={openEmailModal}
@@ -274,6 +313,22 @@ export default function UserDetailPage() {
                 <Icon name="download" className="text-[16px]" />
                 Export Statement
               </button>
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Restriction" icon="block">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] uppercase tracking-widest text-on-surface-variant">Status</p>
+                <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase flex items-center gap-1 ${
+                  user.restriction ? "bg-[#FFEBEE] text-[#C62828]" : "bg-[#E8F5E9] text-[#2E7D32]"
+                }`}>
+                  <Icon name={user.restriction ? "block" : "check_circle"} className="text-[12px]" />
+                  {user.restriction ? "Restricted" : "Active"}
+                </span>
+              </div>
+              <Field label="Reasons" value={user.reasons_for_restriction} />
+              <Field label="Incorrect Attempts" value={user.incorrect_attempts != null ? user.incorrect_attempts : 0} />
             </div>
           </SectionCard>
 
@@ -375,6 +430,150 @@ export default function UserDetailPage() {
           </div>
         </div>
       )}
+
+      {showRestrictionModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+          onClick={() => !submittingRestriction && setShowRestrictionModal(false)}
+        >
+          <div
+            className="w-full max-w-md bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-xl"
+            style={{ animation: "modalIn 0.25s ease-out" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-error-container flex items-center justify-center">
+                  <Icon name="block" className="text-error" />
+                </div>
+                <div>
+                  <h3 className="text-headline-md text-primary">
+                    {restrict ? "Restrict User" : "Remove Restriction"}
+                  </h3>
+                  <p className="text-body-sm text-on-surface-variant">{user.name}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => !submittingRestriction && setShowRestrictionModal(false)}
+                className="p-1.5 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant"
+              >
+                <Icon name="close" />
+              </button>
+            </div>
+
+            <form onSubmit={handleRestrictionSubmit} className="space-y-4">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-surface-container/50">
+                <button
+                  type="button"
+                  onClick={() => setRestrict(true)}
+                  className={`flex-1 py-2 px-3 rounded-lg font-label-md transition-all duration-200 ${
+                    restrict
+                      ? "bg-error text-on-error shadow-sm scale-[1.02]"
+                      : "bg-surface-container text-on-surface-variant hover:bg-surface-container-hover"
+                  }`}
+                >
+                  <Icon name="block" className="text-[14px] inline mr-1.5" />
+                  Restrict
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRestrict(false)}
+                  className={`flex-1 py-2 px-3 rounded-lg font-label-md transition-all duration-200 ${
+                    !restrict
+                      ? "bg-primary text-on-primary shadow-sm scale-[1.02]"
+                      : "bg-surface-container text-on-surface-variant hover:bg-surface-container-hover"
+                  }`}
+                >
+                  <Icon name="check_circle" className="text-[14px] inline mr-1.5" />
+                  Unrestrict
+                </button>
+              </div>
+
+              {restrict && (
+                <div className="space-y-4" style={{ animation: "slideIn 0.2s ease-out" }}>
+                  <div>
+                    <label className="font-label-md text-on-surface-variant block mb-1">Reason for Restriction</label>
+                    <textarea
+                      className="w-full px-4 py-2.5 text-body-md border border-outline-variant rounded-lg bg-surface-container-lowest focus:outline-none focus:border-primary transition-colors resize-none"
+                      rows={3}
+                      placeholder="e.g. Suspicious activity detected"
+                      value={reasonsForRestriction}
+                      onChange={(e) => setReasonsForRestriction(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="font-label-md text-on-surface-variant block mb-1">Incorrect Attempts</label>
+                    <input
+                      type="number"
+                      min={0}
+                      className="w-full px-4 py-2.5 text-body-md border border-outline-variant rounded-lg bg-surface-container-lowest focus:outline-none focus:border-primary transition-colors"
+                      value={incorrectAttempts}
+                      onChange={(e) => setIncorrectAttempts(Number(e.target.value))}
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
+              {!restrict && (
+                <div className="p-3 rounded-lg bg-surface-container/50 text-body-sm text-on-surface-variant" style={{ animation: "slideIn 0.2s ease-out" }}>
+                  <Icon name="info" className="text-[16px] inline mr-1.5 align-text-bottom" />
+                  Restriction will be removed and incorrect attempts will be reset to 0.
+                </div>
+              )}
+
+              {restrictionResult && (
+                <div className={`px-4 py-3 rounded-lg text-body-sm flex items-start gap-2 ${
+                  restrictionResult.ok ? "bg-[#E8F5E9] text-[#2E7D32]" : "bg-[#FFEBEE] text-[#C62828]"
+                }`}>
+                  <Icon name={restrictionResult.ok ? "check_circle" : "error"} className="text-[18px] shrink-0 mt-0.5" />
+                  <span>{restrictionResult.msg}</span>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowRestrictionModal(false)}
+                  disabled={submittingRestriction}
+                  className="px-4 py-2.5 border border-outline-variant rounded-lg font-label-md hover:bg-surface-container transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submittingRestriction || (restrict && !reasonsForRestriction)}
+                  className="px-5 py-2.5 bg-primary text-on-primary rounded-lg font-label-md flex items-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submittingRestriction ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-on-primary border-t-transparent rounded-full animate-spin" />
+                      Saving...
+                    </span>
+                  ) : (
+                    <>
+                      <Icon name={restrict ? "block" : "check_circle"} className="text-[16px]" />
+                      {restrict ? "Apply Restriction" : "Remove Restriction"}
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes modalIn {
+          from { opacity: 0; transform: scale(0.96) translateY(10px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes slideIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </>
   );
 }

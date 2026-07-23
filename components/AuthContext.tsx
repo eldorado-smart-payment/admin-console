@@ -53,18 +53,6 @@ function clearSession() {
   removeCookie("pending_email");
 }
 
-function sendBeaconLogout(refreshToken: string | null) {
-  if (!refreshToken) return;
-  const base = process.env.NEXT_PUBLIC_API_BASE;
-  if (!base) return;
-  try {
-    const blob = new Blob([JSON.stringify({ refresh_token: refreshToken })], { type: "application/json" });
-    navigator.sendBeacon(`${base}/auth/users/logout/`, blob);
-  } catch {
-    // Best-effort; local session is already cleared
-  }
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -142,23 +130,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    function handleBeforeUnload() {
-      const refresh_token = localStorage.getItem("refresh_token");
-      sendBeaconLogout(refresh_token);
-      clearSession();
-    }
-
     const events = ["mousedown", "keydown", "scroll", "touchstart"];
     events.forEach((e) => window.addEventListener(e, resetTimer));
     window.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("beforeunload", handleBeforeUnload);
     resetTimer();
 
     return () => {
       clearTimeout(timeout);
       events.forEach((e) => window.removeEventListener(e, resetTimer));
       window.removeEventListener("visibilitychange", handleVisibility);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [user]);
 

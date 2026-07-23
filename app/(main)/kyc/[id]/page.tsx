@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   fetchKycSubmissionDetail,
   submitToNinepsbTier2,
@@ -374,6 +374,7 @@ const staticMetaKeys = [
 
 export default function KycSubmissionDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const [detail, setDetail] = useState<KycDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -1132,6 +1133,13 @@ export default function KycSubmissionDetailPage() {
                   </button>
                 </div>
               </div>
+              <button
+                className="flex w-full items-center justify-between rounded-lg border border-secondary bg-secondary-fixed/20 px-3 py-2 text-sm font-semibold text-secondary hover:bg-secondary-fixed/40 transition-colors"
+                onClick={() => router.push(`/kyc/${id}/tier2-upgrade`)}
+              >
+                <span>Manual Tier 2 Upgrade</span>
+                <Icon name="verified_user" className="text-secondary" />
+              </button>
               <button
                 className="flex w-full items-center justify-between rounded-lg border border-outline-variant bg-surface-container px-3 py-2 text-sm font-semibold text-primary hover:bg-surface-container-high transition-colors"
                 onClick={() => setShowEmailModal(true)}

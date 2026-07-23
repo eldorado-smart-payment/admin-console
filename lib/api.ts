@@ -123,6 +123,50 @@ export async function fetchProofOfAddress(id: string | number) {
   return apiClient(`/user-kyc-management/${id}/proof-of-address/`, { method: "GET" });
 }
 
+export type ManualTier2Data = {
+  nin: string;
+  nin_issued_date: string;
+  pep_status: string;
+  user_signature_url: string;
+  front_id_url: string;
+  user_photo_url: string;
+  bill_proof_url: string;
+  street: string;
+  nearest_land_mark: string;
+  city: string;
+  local_government: string;
+  state: string;
+  zip_code: string;
+  country_code: string;
+};
+
+export async function submitManualTier2Upgrade(id: string | number, data: ManualTier2Data) {
+  return apiClient(`/user-kyc-management/${id}/manual-tier2-upgrade/`, {
+    method: "POST",
+    body: data,
+  });
+}
+
+export async function submitManualTier2UpgradeWithFiles(id: string | number, data: Record<string, string | Blob>) {
+  const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+  const headers: Record<string, string> = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  const fd = new FormData();
+  Object.entries(data).forEach(([key, value]) => {
+    fd.append(key, value);
+  });
+  const res = await fetch(`${API_BASE}/user-kyc-management/${id}/manual-tier2-upgrade/`, {
+    method: "PATCH",
+    headers,
+    body: fd,
+  });
+  const text = await res.text();
+  let json;
+  try { json = JSON.parse(text); } catch { json = {}; }
+  if (!res.ok) throw new Error(json.message || json.error || "Submission failed");
+  return json;
+}
+
 export async function updateMetaAddressStatus(id: string | number, meta_address_status: string) {
   return apiClient(`/user-kyc-management/${id}/update-meta-address-status/`, {
     method: "PATCH",
@@ -322,6 +366,9 @@ export type UserDetail = {
   total_transactions: number;
   total_deposits: number;
   total_withdrawals: number;
+  restriction: boolean;
+  reasons_for_restriction: string | null;
+  incorrect_attempts: number;
   created_at: string;
   last_login: string;
   ledger: LedgerEntry[];
@@ -346,6 +393,16 @@ export async function fetchUsers(params?: { page?: number; search?: string; stat
 
 export async function fetchUserDetail(id: string | number) {
   return apiClient(`/users/user-detail/${id}/`, { method: "GET" }) as Promise<UserDetailResponse>;
+}
+
+export async function updateUserRestriction(
+  id: string | number,
+  data: { restriction: boolean; reasons_for_restriction?: string; incorrect_attempts?: number }
+) {
+  return apiClient(`/users/user-detail/${id}/restriction/`, {
+    method: "PATCH",
+    body: data,
+  });
 }
 
 export async function sendMailToUser(email: string, subject: string, message: string) {
